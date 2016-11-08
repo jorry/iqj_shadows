@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <style type="text/css">
+        .booklist dt {
+            float: left;
+            width: 10%;
+            /*text-align: right;*/
+        }
+
+        .booklist dd {
+            width: 90%;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<!-- 公共头部 -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">独立团</a>
+            </div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            {{#each arr}}
+                <ul class="nav navbar-nav">
+                    <li class="{{hotfix}}"><a href="/index">热修复</a></li>
+                    <li class="{{userpostion}}"><a href="/userpositon">展示单用户行为</a></li>
+                    <li class="{{abuser}}"><a href="/abuser">展示a/b 用户统计</a></li>
+                    <li class="{{absetting}}"><a href="/absetting">设置A/B testting</a></li>
+                    <li class="{{grayUserSetting}}"><a href="/grayUserSetting">设置灰度功能测试</a></li>
+                    <li class="{{hotfixResult}}"><a href="/hotfixResult">展示补丁修复信息</a></li>
+                    <li class="{{hotfixEngine}}"><a href="/hotfixEngine">修复交互引擎</a></li>
+                    <li class="{{hotfixEngine}}"><a href="/hotfixRevert">灰度代码回滚</a></li>
+                    <li class="{{abt}}"><a href="/about">关于</a></li>
+
+                </ul>
+            {{/each}}
+
+        </div>
+    </div>
+</nav>
+<div class='container'>
+    {{#if success_msg}}
+        <div class="alert alert-success">{{success_msg}}</div>
+    {{/if}}
+    {{#if error_msg}}
+        <div class="alert alert-danger">{{error_msg}}</div>
+    {{/if}}
+</div>
+
+<!-- 内容部分 -->
+{{{body}}}
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<!-- <script src="http://v3.bootcss.com/assets/js/docs.min.js"></script> -->
+<script type="text/javascript">
+
+    function formSubmit(){
+        var value = document.getElementById("us").value; //灰度设置
+        $.StandardPost("/graySettingPost", {
+            value: value
+        });
+    }
+
+    $(document).ready(function () {
+        $(".detail").each(function (index) {
+            $(".detail").eq(index).click(function () {
+                var imei = $(".imei").eq(index).text();
+                $.StandardPost("/userpositon_detail", {
+                    imei: imei
+                });
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $(".revert_item").each(function (index) {
+            $(".revert_item").eq(index).click(function () {
+
+                var hashCode = $(".hashCode").eq(index).text();
+                $.StandardPost("/reverSettingResult", {
+                    hashCode: hashCode
+                });
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $(".login").click(function () {
+            document.location.href = '/index';
+        });
+    });
+
+    //hotFix 点击确认按钮的调用   get方式, express 路由 在注册的时候要区分get还是post
+    $(document).ready(function () {
+        $('.uploadHotFixConfirm').click(function () {
+            document.location.href = '/hotfixUploadFinish';
+        });
+    });
+
+    //路由 注册的post 方式   构建post请求
+    $.extend({
+        StandardPost: function (url, args) {
+            var form = $("<form method='post'></form>");
+            var input;
+            form.attr({"action": url});
+            $.each(args, function (key, value) {
+                input = $("<input type='hidden'>");
+                input.attr({"name": key});
+                input.val(value);
+                form.append(input);
+            });
+            form.appendTo(document.body);
+            form.submit();
+            document.body.removeChild(form[0]);
+        }
+    });
+
+    $('#editfile').submit(function (e) {
+        var data = new FormData();
+        data.append('file', $('#upfile')[0].files[0]);
+        $.ajax({
+            url: '/uploads',
+            data: data,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                console.log("data = ");   //返回上传后所在的路径
+
+            }
+        });
+        e.preventDefault();
+    });
+
+
+</script>
+</body>
+</html>

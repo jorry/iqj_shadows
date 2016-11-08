@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">单点用户行为</h4>
+                </div>
+                <div class="panel-body">
+                    <!-- <h2 class="sub-header">Section title</h2> -->
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <th>设备ID</th>
+                                <th>app版本</th>
+                                <th>手机系统版本</th>
+                                <th>用户网络</th>
+                                <th>详情</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each oneUser}}
+                                <tr>
+                                    <td class="imei">{{imei}}</td>
+                                    <td>{{appVersion}}</td>
+                                    <td>{{osVersion}}</td>
+                                    <td>{{net}}</td>
+                                    <td>
+                                        <button class="detail btn btn-sm">查看详情</button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- footer -->
+    <div class="footer">
+        <p>© Company 2016</p>
+    </div>
+</div>

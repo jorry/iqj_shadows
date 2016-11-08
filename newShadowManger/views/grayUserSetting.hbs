@@ -1,0 +1,71 @@
+<!-- body -->
+<div class='container'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{title}}</h4>
+        </div>
+        <div class="panel-body">
+            <h4>To know the road ahead, ask those coming back.</h4>
+            <h5> 目前仅仅支持根据渠道来进行灰度测试
+                360 渠道必须加固, 目前360 渠道的用户是不能用的.
+                所以呢............ 只能根据渠道进行划分</h5>
+
+            <h5>灰度功能测试: 产品经理根据功能进行验证,那么久根据某个渠道的app 统一进行灰度测试.  后续根据灰度测试的数据来调整</h5>
+            <h5></h5>
+
+            <div class="panel-body">
+                <div class="row Login-box">
+                    <div class="col-lg-4 col-lg-offset-4">
+
+                        <input type="text" class="form-control us" id="us" name="username" placeholder="请输入渠道号" required=""
+                               autofocus="true">
+
+                        <input id="referer" type="hidden" name="referer">
+
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="formSubmit()" style="margin-top: 50px">登录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+        <p>© Company 2016</p>
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <!-- <script src="http://v3.bootcss.com/assets/js/docs.min.js"></script> -->
+    <script type="text/javascript">
+
+
+
+        //路由 注册的post 方式   构建post请求
+        $.extend({
+            StandardPost: function (url, args) {
+                var form = $("<form method='post'></form>");
+                var input;
+                form.attr({"action": url});
+                $.each(args, function (key, value) {
+                    input = $("<input type='hidden'>");
+                    input.attr({"name": key});
+                    input.val(value);
+                    form.append(input);
+                });
+                form.appendTo(document.body);
+                form.submit();
+                document.body.removeChild(form[0]);
+            }
+        });
+
+
+
+
+    </script>
+</div>
+
+

@@ -1,0 +1,40 @@
+<!-- body -->
+<div class='container'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">A/B testting 用户</h4>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>页面</th>
+                    <th>按钮</th>
+                    <th>A方案</th>
+                    <th>B方案</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {{#each abuser}}
+                    <tr>
+                        <td>{{id}}</td>
+                        <td>{{pageId}}</td>
+                        <td>{{buttonId}}</td>
+                        <td>{{Apage}}</td>
+                        <td>{{Bpage}}</td>
+
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- footer -->
+    <div class="footer">
+        <p>© Company 2016</p>
+    </div>
+</div>

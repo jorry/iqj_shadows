@@ -1,0 +1,32 @@
+<!-- 登录页 -->
+<div class='container'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{title}}</h4>
+        </div>
+        <div class="panel-body">
+            <div class="row Login-box">
+                <div class="col-lg-4 col-lg-offset-4">
+
+                    <input type="text" class="form-control" name="username" placeholder="一个独特的账号" required=""
+                           autofocus="true">
+                    <input style="margin-top:10px;" type="password" class="form-control" name="password"
+                           placeholder="の" required="">
+                    <input id="referer" type="hidden" name="referer">
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="remember-me">记住密码
+                        </label>
+                    </div>
+                    <button class="login btn btn-lg btn-primary btn-block" type="submit">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+        <p>© Company 2016</p>
+    </div>
+</div>

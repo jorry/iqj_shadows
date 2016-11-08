@@ -1,0 +1,23 @@
+//Mysql数据库中各表说明
+
+//热修复
+mysql> CREATE TABLE hotFix(
+    -> imei VARCHAR(50) NOT NULL,//设备ID
+    -> appVersion VARCHAR(50) NOT NULL,//系统版本
+    -> userPhone VARCHAR(50) NOT NULL,//用户手机号
+    -> hotfixType VARCHAR(50) NOT NULL,//修复类型，1. 全用户；2. app版本用户
+    -> PRIMARY KEY(imei));
+
+INSERT INTO hotFix (hashCode,appVersion,hotfixType,uploadDate,hotUrl) VALUES ('212121','5.1','1','2012-7-1','http://www.iqianjin.com')
+
+SELECT hashCode,appVersion,hotfixType,uploadDate,hotUrl FROM hotFix ;
+
+用户修复补丁的的类型
+myslq > CREATE TABLE appHotFixState(
+       	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+       	imei VARCHAR(50) NOT NULL,    //可能重复,页面显示的时候需要排重功能
+       	appState CHAR(1) NOT NULL,    //1.表示修复成功,2.修复失败
+       	hotPushType CHAR(1) NOT NULL  //1. 修复bug, 2.a/b testting .其他还没想好怎么做,预留
+       	)
+
+"INSERT INTO appHotFixState (imei,appState,hotPushType) VALUES ('"+imei+"','"+appState+"','"+hotPushType+"')";
