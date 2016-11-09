@@ -46,6 +46,47 @@ HotFix.save = function (hashCode, appVersion, hotfixType, callback) {
     });
 };
 
+HotFix.getHotFixRows = function (callback) {
+    db.getConnection(function (err, connection) {
+
+        if (err) {
+            return callback(err);
+        }
+
+        var sql;
+        connection.beginTransaction(function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            sql = "SELECT * FROM hotFix;";
+
+            connection.query(sql, [], function (err, rows) {
+                if (err) {
+                    return connection.rollback(function () {
+                        callback(err);
+                    });
+                }
+
+                connection.commit(function (err) {
+
+                    if (err) {
+                        return connection.rollback(function () {
+                            callback(err);
+                        });
+                    }
+
+                    connection.end();
+                    callback(undefined,rows);
+
+                });
+            });
+        });
+    });
+};
+
+
+
 //灰度重置 功能,重置成功后,还需要重置下hot那个表
 HotFix.graySettingReset = function (hashCode,revert,callback) {
 

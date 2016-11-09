@@ -1,14 +1,91 @@
 var express = require('express');
+//引入multer模块
+var multer = require ('multer');
+
 var router = express.Router();
 var path = require('path');
 var hotFix = require('../models/hotFix');
+
+var hotDB = require("../models/hotDB");
+
 var fs = require("fs");
+
+
+var createFolder = function(folder){
+    try{
+        fs.accessSync(folder);
+    }catch(e){
+        fs.mkdirSync(folder);
+    }
+};
+
+//生成一个文件,但是没有后缀
+var uploadFolder = '/Users/iqianjin-liujiawei/Desktop/shadowsManger/newShadowManger/apks/';
+
+createFolder(uploadFolder);
+
+var upload = multer({ dest:  uploadFolder });
+
+
+////指定apk名字
+//var storage = multer.diskStorage({
+//    destination: function (req, file, cb) {
+//        cb(null, uploadFolder);    // 保存的路径，备注：需要自己创建
+//    },
+//    filename: function (req, file, cb) {
+//        // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
+//        console.log('---'+file.filename);
+//        console.log('---'+file);
+//
+//        cb(null, file.originalname);
+//    }
+//});
+//
+//// 通过 storage 选项来对 上传行为 进行定制化
+//var upload = multer({ storage: storage })
 
 
 /* GET home page. */
 router.get('/', function (req, res, nnext) {
     res.redirect('/login');
 });
+
+
+//单位件上传
+//注意上传界面中的 <input type="file" name="avatar"/>中的name必须是下面代码中指定的名称
+router.post('/singleUpload', upload.single('file'), function (req, res, next) {
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+
+    var file = req.file;
+
+    var hashCode = file.filename;
+    var fileSize = file.size;
+    var fileName = file.originalname;
+
+    var description = req.body.description;
+
+
+    hotDB.save(hashCode,fileName,fileSize,description,function(err){
+        console.log('err'+err);
+        if (err){
+            next(err);
+        }
+        res.end("ok");
+    });
+
+    console.log('文件类型：%s', file.mimetype);
+    console.log('原始文件名：%s', file.originalname);
+    console.log('新的文件名：%s', file.fieldname);
+
+    console.log('文件大小：%s', file.size);
+    console.log('文件保存路径：%s', file.path);
+    console.log(req.file);
+    console.log(req.body);
+
+
+});
+
 
 //灰度设置提交调用,先更新灰度数据库,然后在更新总数据库(在代码回滚界面用到此数据库)
 router.post('/graySettingPost', function (req, res, nnext) {
@@ -156,9 +233,12 @@ router.get('/abSetting', function (req, res, next) {
 });
 
 router.get('/index', function (req, res, next) {
-    res.render('index', {
-        title: 'index',
-        arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}]
+    hotFix.getHotFixRows(function(err,rows){
+        res.render('index', {
+            title: 'index',
+            arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
+            rows:rows
+        });
     });
 
 });
