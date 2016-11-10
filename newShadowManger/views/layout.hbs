@@ -40,7 +40,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             {{#each arr}}
                 <ul class="nav navbar-nav">
-                    <li class="{{hotfix}}"><a href="/index">热修复</a></li>
+                    <li class="{{hotfix}}"><a href="/index">补丁管理</a></li>
                     <li class="{{userpostion}}"><a href="/userpositon">展示单用户行为</a></li>
                     <li class="{{abuser}}"><a href="/abuser">展示a/b 用户统计</a></li>
                     <li class="{{absetting}}"><a href="/absetting">设置A/B testting</a></li>
@@ -82,16 +82,31 @@
         });
     }
 
+
+
     $(document).ready(function () {
         $(".detail").each(function (index) {
             $(".detail").eq(index).click(function () {
-                var imei = $(".imei").eq(index).text();
+                var hashCode = $(".imei").eq(index).text();
                 $.StandardPost("/userpositon_detail", {
                     imei: imei
                 });
             });
         });
     });
+
+    $(document).ready(function () {
+        $(".patch_detail").each(function (index) {
+            $(".patch_detail").eq(index).click(function () {
+                var hash = $(".hashCode").eq(index).text();
+                $.StandardPost("/patch", {
+                    hashCode: hash
+                });
+            });
+        });
+    });
+
+
 
     $(document).ready(function () {
         $(".revert_item").each(function (index) {

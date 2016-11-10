@@ -20,7 +20,7 @@ var createFolder = function(folder){
 };
 
 //生成一个文件,但是没有后缀
-var uploadFolder = '/Users/iqianjin-liujiawei/Desktop/shadowsManger/newShadowManger/apks/';
+var uploadFolder = '/Users/iqianjin-liujiawei/Desktop/shadowsManger/git/fileServer/http-server/public';
 
 createFolder(uploadFolder);
 
@@ -54,24 +54,23 @@ router.get('/', function (req, res, nnext) {
 //单位件上传
 //注意上传界面中的 <input type="file" name="avatar"/>中的name必须是下面代码中指定的名称
 router.post('/singleUpload', upload.single('file'), function (req, res, next) {
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any
 
     var file = req.file;
-
     var hashCode = file.filename;
     var fileSize = file.size;
     var fileName = file.originalname;
 
     var description = req.body.description;
+    var patch_type = req.body.patch_type;
+    var patch_status = 0;
+    var tags = req.body.tags;
 
-
-    hotDB.save(hashCode,fileName,fileSize,description,function(err){
+    hotDB.save(hashCode,fileName,fileSize,description,patch_status,patch_type,tags,function(err){
         console.log('err'+err);
         if (err){
             next(err);
         }
-        res.end("ok");
+        res.redirect('/hotfixAddDB');
     });
 
     console.log('文件类型：%s', file.mimetype);
@@ -86,6 +85,12 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
 
 });
 
+router.get('/hotfixAddDB',function(req,res,next){
+    res.render('revert_return', {
+        title: '添加补丁完成',
+        message: '请在补丁管理界面进行发布'
+    });
+})
 
 //灰度设置提交调用,先更新灰度数据库,然后在更新总数据库(在代码回滚界面用到此数据库)
 router.post('/graySettingPost', function (req, res, nnext) {
@@ -216,6 +221,7 @@ router.get('/login', function (req, res, next) {
 });
 
 
+
 router.get('/grayUserSetting', function (req, res, next) {
     console.log('----grayUserSetting--跳转,进来了吗');
     res.render('grayUserSetting', {
@@ -232,14 +238,77 @@ router.get('/abSetting', function (req, res, next) {
     });
 });
 
+//补丁列表
 router.get('/index', function (req, res, next) {
+
     hotFix.getHotFixRows(function(err,rows){
+
+        console.log('JSON','json = '+rows);
+
+        rows.forEach(function (row) {
+            if (row.patch_type == 1) {
+                row.patch_type = '全量更新';
+            } else if (row.patch_type == 0) {
+                row.patch_type = '灰度更新';
+            }
+
+            if (row.patch_status == 0) {
+                row.patch_status = '未发布';
+            } else if (row.patch_status == 1) {
+                row.patch_status = '已发布';
+            }
+
+        });
+
         res.render('index', {
             title: 'index',
             arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
             rows:rows
         });
     });
+
+});
+
+// 补丁详情,用于补丁的发布操作
+router.post('/patch', function (req, res, next) {
+    var hashCode  = req.body.hashCode;
+    console.log('hashCode = '+hashCode);
+    hotDB.getHotFixRow(hashCode,function(err,row){
+        if (err){
+            return next(err);
+        }
+        if (!row){
+            return next('没有找到相关数据');
+        }
+
+        var status = row.patch_status;
+
+        console.log(row.patch_status+'row = '+row.patch_type);
+
+        if (status == 0){   //未发布
+            status = 'status';
+        }else{
+            status = '';
+        }
+
+        var type = row.patch_type;
+
+
+        if (type == 0){    //灰度
+            type = '';
+        }else{
+            type = 'type';
+        }// 灰度
+
+        console.log(status+'type = '+type);
+
+        res.render('patch', {
+            title: '发布补丁',
+            status:status,
+            type:type,
+            row:row
+        });
+    })
 
 });
 
