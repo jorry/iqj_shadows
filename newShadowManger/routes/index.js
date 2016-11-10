@@ -1,6 +1,6 @@
 var express = require('express');
 //引入multer模块
-var multer = require ('multer');
+var multer = require('multer');
 
 var router = express.Router();
 var path = require('path');
@@ -11,10 +11,10 @@ var hotDB = require("../models/hotDB");
 var fs = require("fs");
 
 
-var createFolder = function(folder){
-    try{
+var createFolder = function (folder) {
+    try {
         fs.accessSync(folder);
-    }catch(e){
+    } catch (e) {
         fs.mkdirSync(folder);
     }
 };
@@ -24,7 +24,7 @@ var uploadFolder = '/Users/iqianjin-liujiawei/Desktop/shadowsManger/git/fileServ
 
 createFolder(uploadFolder);
 
-var upload = multer({ dest:  uploadFolder });
+var upload = multer({dest: uploadFolder});
 
 
 ////指定apk名字
@@ -65,9 +65,9 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
     var patch_status = 0;
     var tags = req.body.tags;
 
-    hotDB.save(hashCode,fileName,fileSize,description,patch_status,patch_type,tags,function(err){
-        console.log('err'+err);
-        if (err){
+    hotDB.save(hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
+        console.log('err' + err);
+        if (err) {
             next(err);
         }
         res.redirect('/hotfixAddDB');
@@ -85,7 +85,7 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
 
 });
 
-router.get('/hotfixAddDB',function(req,res,next){
+router.get('/hotfixAddDB', function (req, res, next) {
     res.render('revert_return', {
         title: '添加补丁完成',
         message: '请在补丁管理界面进行发布'
@@ -123,10 +123,10 @@ router.post('/graySettingPost', function (req, res, nnext) {
 });
 
 //灰度代码回滚界面,点击列表item, 调用这里
-router.post('/reverSettingResult', function (req, res,next) {
+router.post('/reverSettingResult', function (req, res, next) {
     var hashCode = req.body.hashCode;
     console.log('-----reverSettingResult');
-    hotFix.graySettingReset(hashCode,2, function (err) {
+    hotFix.graySettingReset(hashCode, 2, function (err) {
         if (err) {
             return next(err);
         }
@@ -221,7 +221,6 @@ router.get('/login', function (req, res, next) {
 });
 
 
-
 router.get('/grayUserSetting', function (req, res, next) {
     console.log('----grayUserSetting--跳转,进来了吗');
     res.render('grayUserSetting', {
@@ -241,9 +240,9 @@ router.get('/abSetting', function (req, res, next) {
 //补丁列表
 router.get('/index', function (req, res, next) {
 
-    hotFix.getHotFixRows(function(err,rows){
+    hotFix.getHotFixRows(function (err, rows) {
 
-        console.log('JSON','json = '+rows);
+        console.log('JSON', 'json = ' + rows);
 
         rows.forEach(function (row) {
             if (row.patch_type == 1) {
@@ -263,7 +262,7 @@ router.get('/index', function (req, res, next) {
         res.render('index', {
             title: 'index',
             arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
-            rows:rows
+            rows: rows
         });
     });
 
@@ -271,45 +270,80 @@ router.get('/index', function (req, res, next) {
 
 // 补丁详情,用于补丁的发布操作
 router.post('/patch', function (req, res, next) {
-    var hashCode  = req.body.hashCode;
-    console.log('hashCode = '+hashCode);
-    hotDB.getHotFixRow(hashCode,function(err,row){
-        if (err){
+    var hashCode = req.body.hashCode;
+    console.log('hashCode = ' + hashCode);
+    hotDB.getHotFixRow(hashCode, function (err, row) {
+        if (err) {
             return next(err);
         }
-        if (!row){
+        if (!row) {
             return next('没有找到相关数据');
         }
 
         var status = row.patch_status;
 
-        console.log(row.patch_status+'row = '+row.patch_type);
+        console.log(row.patch_status + 'row = ' + row.patch_type);
 
-        if (status == 0){   //未发布
+        if (status == 0) {   //未发布
             status = 'status';
-        }else{
+        } else {
             status = '';
         }
 
         var type = row.patch_type;
 
 
-        if (type == 0){    //灰度
+        if (type == 0) {    //灰度
             type = '';
-        }else{
+        } else {
             type = 'type';
         }// 灰度
 
-        console.log(status+'type = '+type);
+        console.log(status + 'type = ' + type);
 
         res.render('patch', {
             title: '发布补丁',
-            status:status,
-            type:type,
-            row:row
+            status: status,
+            type: type,
+            row: row
         });
     })
 
+});
+
+
+// 补丁详情,用于补丁的发布操作
+router.post('/publicManagerModel', function (req, res, next) {
+
+
+
+    var hashCode = req.body.hashCode;
+    var update = req.body.update;
+
+    console.log(update+'publicManagerModel - hashCode = ' + hashCode);
+
+
+    hotDB.managerHotFix(update, hashCode, function (err) {
+        if (err) {
+            return next(err);
+        }
+        var message = "";
+        if (update == 0){
+            message = "删除补丁完成";
+        }else if(update == 1){
+            message = "灰度补丁已发布";
+        }else if (update == 2){
+            message = "已进行全量更新";
+        }else if (update == 3){
+            message = "已停止灰度发布";
+        }else if (update == 4){
+            message = "已停止全量发布";
+        }
+        res.render('publicManagerModel', {
+            title: '补丁管理平台',
+            message: message
+        });
+    });
 });
 
 

@@ -11,7 +11,7 @@ module.exports = HotFix;
 // patch_status  0 未发布;1 已发布
 // patch_type 1. 全量更新,2,灰度测试
 
-HotFix.save = function (hashCode, fileName, fileSize,description,patch_status,patch_type,tags, callback) {
+HotFix.save = function (hashCode, fileName, fileSize, description, patch_status, patch_type, tags, callback) {
     db.getConnection(function (err, connection) {
 
         if (err) {
@@ -29,7 +29,7 @@ HotFix.save = function (hashCode, fileName, fileSize,description,patch_status,pa
             var appVersion = "4.9.3";
             sql = "INSERT INTO hotFix SET app_id=?,version_name=?,hashCode=?,appVersion=?,patch_size=?,file_hash=?,create_date=?,description=?,hotUrl=?,patch_status=?,patch_type=?,tags=?";
             console.log('2-----进来了吗');
-            connection.query(sql, [app_id,version_name,hashCode,appVersion,fileSize,fileName,date,description,hashCode,patch_status,patch_type,tags], function (err, rows) {
+            connection.query(sql, [app_id, version_name, hashCode, appVersion, fileSize, fileName, date, description, hashCode, patch_status, patch_type, tags], function (err, rows) {
                 if (err) {
                     return connection.rollback(function () {
                         callback(err);
@@ -54,7 +54,53 @@ HotFix.save = function (hashCode, fileName, fileSize,description,patch_status,pa
 };
 
 
-HotFix.getHotFixRow = function (hashCode,callback) {
+HotFix.managerHotFix = function (status, hashCode, callback) {
+    db.getConnection(function (err, connection) {
+
+        if (err) {
+            return callback(err);
+        }
+
+        var sql;
+        connection.beginTransaction(function (err) {
+            if (status == 0) {  //删除
+
+                sql = "DELETE FROM hotFix WHERE hashCode = '" + hashCode + "';";
+
+            } else if(status == 1 || status == 2){  //发布补丁
+                sql = "UPDATE hotFix SET patch_status = 1  WHERE hashCode = '"+hashCode+"';";
+            }else if (status == 3 || status == 4){
+                sql = "UPDATE hotFix SET patch_status = 0  WHERE hashCode = '"+hashCode+"';";
+            }
+
+            console.log("sql = " + sql)
+            connection.query(sql, [], function (err, rows) {
+                if (err) {
+                    return connection.rollback(function () {
+                        callback(err);
+                    });
+                }
+
+
+                connection.commit(function (err) {
+
+                    if (err) {
+                        return connection.rollback(function () {
+                            callback(err);
+                        });
+                    }
+
+                    connection.end();
+                    callback();
+
+                });
+            });
+        });
+    });
+};
+
+
+HotFix.getHotFixRow = function (hashCode, callback) {
     db.getConnection(function (err, connection) {
 
         if (err) {
@@ -67,7 +113,7 @@ HotFix.getHotFixRow = function (hashCode,callback) {
                 return callback(err);
             }
 
-            sql = "SELECT * FROM hotFix WHERE hashCode = '"+hashCode+"';";
+            sql = "SELECT * FROM hotFix WHERE hashCode = '" + hashCode + "';";
 
             connection.query(sql, [], function (err, rows) {
                 if (err) {
@@ -86,14 +132,13 @@ HotFix.getHotFixRow = function (hashCode,callback) {
                     }
 
                     connection.end();
-                    callback(undefined,rows[0]);
+                    callback(undefined, rows[0]);
 
                 });
             });
         });
     });
 };
-
 
 
 HotFix.getHotFixRows = function (callback) {
@@ -128,7 +173,7 @@ HotFix.getHotFixRows = function (callback) {
                     }
 
                     connection.end();
-                    callback(undefined,rows);
+                    callback(undefined, rows);
 
                 });
             });
