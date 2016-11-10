@@ -154,31 +154,31 @@ router.get('/hotfixEngine', function (req, res, next) {
 });
 
 
-router.get('/hotfixRevert', function (req, res, next) {
-    hotFix.hotReverListView(function (err, rows) {
-        if (err) {
-            return next(err);
-        }
-
-        rows.forEach(function (row) {
-            console.log('' + row.hotFixType);
-            if (row.hotFixType == 1) {
-                row.hotFixType = '热修复';
-            } else if (row.hotFixType == 2) {
-                row.hotFixType = 'a/b Testting';
-            } else if (row.hotFixType == 5) {
-                row.hotFixType == '单用户行为';
-            } else if (row.hotFixType == 3) {
-                row.hotFixType = '灰度功能设置';
-            }
-
-        });
-        res.render('hotfixRevert', {
-            title: '设置代码回滚',
-            datas: rows
-        });
-    });
-});
+//router.get('/hotfixRevert', function (req, res, next) {
+//    hotFix.hotReverListView(function (err, rows) {
+//        if (err) {
+//            return next(err);
+//        }
+//
+//        rows.forEach(function (row) {
+//            console.log('' + row.hotFixType);
+//            if (row.hotFixType == 1) {
+//                row.hotFixType = '热修复';
+//            } else if (row.hotFixType == 2) {
+//                row.hotFixType = 'a/b Testting';
+//            } else if (row.hotFixType == 5) {
+//                row.hotFixType == '单用户行为';
+//            } else if (row.hotFixType == 3) {
+//                row.hotFixType = '灰度功能设置';
+//            }
+//
+//        });
+//        res.render('hotfixRevert', {
+//            title: '设置代码回滚',
+//            datas: rows
+//        });
+//    });
+//});
 
 
 router.get('/hotfixResult', function (req, res, next) {
@@ -249,6 +249,8 @@ router.get('/index', function (req, res, next) {
                 row.patch_type = '全量更新';
             } else if (row.patch_type == 0) {
                 row.patch_type = '灰度更新';
+            } else if (row.patch_type == 4) {
+                row.patch_type = '修复h5引擎';
             }
 
             if (row.patch_status == 0) {

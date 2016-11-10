@@ -9,7 +9,7 @@ module.exports = HotFix;
 //app 的名字是用hashCode 为文件名,上传文件后,好像可以获取到文件的名字,然后文件的名字是hashCode, 文件名字后面拼接下载地址
 //以后,要填写上传人名字,上传日期
 // patch_status  0 未发布;1 已发布
-// patch_type 1. 全量更新,2,灰度测试
+// patch_type 1. 全量更新,2,灰度测试,4 全量更新H5交互引擎
 
 HotFix.save = function (hashCode, fileName, fileSize, description, patch_status, patch_type, tags, callback) {
     db.getConnection(function (err, connection) {

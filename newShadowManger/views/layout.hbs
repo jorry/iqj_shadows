@@ -47,7 +47,6 @@
                     <li class="{{grayUserSetting}}"><a href="/grayUserSetting">设置灰度功能测试</a></li>
                     <li class="{{hotfixResult}}"><a href="/hotfixResult">展示补丁修复信息</a></li>
                     <li class="{{hotfixEngine}}"><a href="/hotfixEngine">修复交互引擎</a></li>
-                    <li class="{{hotfixEngine}}"><a href="/hotfixRevert">灰度代码回滚</a></li>
                     <li class="{{abt}}"><a href="/about">关于</a></li>
 
                 </ul>
@@ -85,9 +84,11 @@
 
 
     $(document).ready(function () {
-        $(".detail").each(function (index) {
-            $(".detail").eq(index).click(function () {
-                var hashCode = $(".imei").eq(index).text();
+        $("#detail").each(function (index) {
+
+            $("#detail").eq(index).click(function () {
+
+                var imei = $(".imei").eq(index).text();
                 $.StandardPost("/userpositon_detail", {
                     imei: imei
                 });
@@ -105,7 +106,6 @@
             });
         });
     });
-
 
 
     $(document).ready(function () {
@@ -136,6 +136,7 @@
     //路由 注册的post 方式   构建post请求
     $.extend({
         StandardPost: function (url, args) {
+
             var form = $("<form method='post'></form>");
             var input;
             form.attr({"action": url});
