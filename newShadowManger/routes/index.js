@@ -237,6 +237,16 @@ router.get('/abSetting', function (req, res, next) {
     });
 });
 
+router.get('/app_list', function (req, res, next) {
+    console.log('----abSetting--跳转,进来了吗');
+    res.render('app_list', {
+        title: '',
+        arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}]
+    });
+});
+
+
+
 //补丁列表
 router.get('/index', function (req, res, next) {
 

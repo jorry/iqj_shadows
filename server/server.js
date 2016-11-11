@@ -53,21 +53,22 @@ app.get('/getHotPatch', function (req, res) {
             obj.msg = "err";
             return res.end(JSON.stringify(obj));
         }
-        console.log(result.appVersion +'hotfixType = ' + result.hotfixType)
-        if (result.hotfixType == 2) {  //1 = 全量修复;2 = 根据版本修复
-            if (result.appVersion == appVersion) {
-                result.code = 1;
-                result.msg = 'ok';
-                return res.end(JSON.stringify(result));
-            } else {
-                var obj = new response();
-                obj.code = -2;
-                obj.msg = "err";
-                return res.end(JSON.stringify(obj));
-            }
-        }
+        console.log(result.appVersion +'hotfixType = ')
+        //if (result.hotfixType == 2) {  //1 = 全量修复;2 = 根据版本修复
+        //    if (result.appVersion == appVersion) {
+        //        result.code = 1;
+        //        result.msg = 'ok';
+        //        return res.end(JSON.stringify(result));
+        //    } else {
+        //        var obj = new response();
+        //        obj.code = -2;
+        //        obj.msg = "err";
+        //        return res.end(JSON.stringify(obj));
+        //    }
+        //}
         result.code = 1;
         result.msg = 'ok';
+        result.hotUrl = 'http://172.20.30.66:8080/public/'+result.hotUrl;
         return res.end(JSON.stringify(result));
         console.log('进入到hotFix 数据库查询后,返回的app 的内容是: result= ' + result + " / err = " + err);
     })
@@ -126,8 +127,8 @@ app.get('/addOneUserStep', function (req, res) {
 });
 
 app.get('/graySetting', function (req, res) {
+// /graySetting/?us=77;
 
-    var us = req.query.us; //渠道
     var appVersion = req.query.appVersion;
 
     dbHelper.graySetting(us, appVersion, function (err, result) {
@@ -165,10 +166,7 @@ app.get('/graySetting', function (req, res) {
         });
 
     });
-
 });
-
-
 
 app.get('/listUsers', function (req, res) {
     fs.readFile(__dirname + "/" + "users.json", 'utf8', function (err, data) {
