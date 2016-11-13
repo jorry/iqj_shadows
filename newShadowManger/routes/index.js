@@ -4,9 +4,12 @@ var multer = require('multer');
 
 var router = express.Router();
 var path = require('path');
+
 var hotFix = require('../models/hotFix');
 
 var hotDB = require("../models/hotDB");
+
+var appInfoDB = require("../models/appInfoDB");
 
 var fs = require("fs");
 
@@ -237,15 +240,27 @@ router.get('/abSetting', function (req, res, next) {
     });
 });
 
-router.get('/app_list', function (req, res, next) {
-    console.log('----abSetting--跳转,进来了吗');
-    res.render('app_list', {
-        title: '',
-        arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}]
+
+
+router.get('/createApp', function (req, res, next) {
+
+
+    var appName = req.query.appname;
+    var des = req.query.description;
+    var platform = 'Android';
+    var uid = 1;
+
+    console.log(appName+' createApp '+des);
+
+    appInfoDB.insertAppInfo(appName, des, uid, platform, function (err) {
+        if (err){
+            console.error(err);
+            return next(err);
+        }
+        res.statusCode = 200;
+        res.send();
     });
 });
-
-
 
 //补丁列表
 router.get('/index', function (req, res, next) {
@@ -279,6 +294,24 @@ router.get('/index', function (req, res, next) {
     });
 
 });
+
+router.get('/app_list', function (req, res, next) {
+
+    console.log('----app_list--跳转,进来了吗');
+
+    appInfoDB.selectAll(function(err,rows){
+        if (err){
+            return next(err);
+        }
+        console.log('----应用列表 '+rows);
+        res.render('app_list', {
+            title: 'app应用列表',
+            rows:rows
+        });
+    });
+});
+
+
 
 // 补丁详情,用于补丁的发布操作
 router.post('/patch', function (req, res, next) {
@@ -328,11 +361,10 @@ router.post('/patch', function (req, res, next) {
 router.post('/publicManagerModel', function (req, res, next) {
 
 
-
     var hashCode = req.body.hashCode;
     var update = req.body.update;
 
-    console.log(update+'publicManagerModel - hashCode = ' + hashCode);
+    console.log(update + 'publicManagerModel - hashCode = ' + hashCode);
 
 
     hotDB.managerHotFix(update, hashCode, function (err) {
@@ -340,15 +372,15 @@ router.post('/publicManagerModel', function (req, res, next) {
             return next(err);
         }
         var message = "";
-        if (update == 0){
+        if (update == 0) {
             message = "删除补丁完成";
-        }else if(update == 1){
+        } else if (update == 1) {
             message = "灰度补丁已发布";
-        }else if (update == 2){
+        } else if (update == 2) {
             message = "已进行全量更新";
-        }else if (update == 3){
+        } else if (update == 3) {
             message = "已停止灰度发布";
-        }else if (update == 4){
+        } else if (update == 4) {
             message = "已停止全量发布";
         }
         res.render('publicManagerModel', {
