@@ -9,6 +9,7 @@ var hotFix = require('../models/hotFix');
 var hotDB = require("../models/hotDB");
 
 var fs = require("fs");
+var Promise = require("bluebird");
 
 
 var createFolder = function(folder){
@@ -20,7 +21,7 @@ var createFolder = function(folder){
 };
 
 //生成一个文件,但是没有后缀
-var uploadFolder = '/Users/iqianjin-liujiawei/Desktop/shadowsManger/newShadowManger/apks/';
+var uploadFolder = '/Users/iqianjin-shisongsong/Desktop/shadowsManger/newShadowManger/apks/';
 
 createFolder(uploadFolder);
 
@@ -140,8 +141,8 @@ router.get('/hotfixEngine', function (req, res, next) {
     //hotFix.save("4.5.1", "1", function (err) {
     //    if (err) {
     //        return next(err);
-    //    }
     //
+    //    }
     //});
     res.render('hotfixEngine', {
         title: '修复H5交互引擎'
@@ -176,17 +177,17 @@ router.get('/hotfixRevert', function (req, res, next) {
 });
 
 
-router.get('/hotfixResult', function (req, res, next) {
-    //hotFix.save("4.5.1", "1", function (err) {
-    //    if (err) {
-    //        return next(err);
-    //    }
-    //
-    //});
-    res.render('hotfixResult', {
-        title: '补丁完成查看'
-    });
-});
+//router.get('/hotfixResult', function (req, res, next) {
+//    //hotFix.save("4.5.1", "1", function (err) {
+//    //    if (err) {
+//    //        return next(err);
+//    //    }
+//    //
+//    //});
+//    res.render('hotfixResult', {
+//        title: '补丁完成查看'
+//    });
+//});
 
 function addSaveHot(hashCode, hotFixType, revert) {
     hotFix.addSaveHot(hashCode, hotFixType, revert, function (err, result) {
@@ -320,6 +321,64 @@ router.get('/abuser', function (req, res, next) {
             Bpage: 10
         }]
     });
+});
+
+
+router.get('/hotfixResult', function (req, res) {
+    let promise = new Promise(resolve=> {
+        hotFix.getHotFixResult(function (err, result) {
+            resolve(result);
+        });
+    })
+
+    promise.then(v=> {
+        let rows = v.map(item=> {
+            return new Promise(resolve=> {
+                hotFix.getHotFixCountByHashCode(item.hashCode, function (err, count) {
+                    item.count = count;
+                    resolve(item);
+                });
+            })
+        })
+
+        Promise.all(rows).then(result=> {
+
+            console.log("result ======= " + v)
+            let rows2 = v.map(item=> {
+                return new Promise(resolve=> {
+                    hotFix.getHotFixCountSuccess(item.hashCode, function (err, count) {
+                        item.successCount = count;
+                        resolve(item);
+                    });
+                })
+            })
+
+            Promise.all(rows2).then(result=> {
+                    v = new Array;
+                    result.forEach(item=> {
+                        if (item.successCount == undefined || item.count == undefined || item.count == 0) {
+                            if (item.successCount == undefined) item.successCount = 0;
+                            if (item.count == undefined) item.count = 0;
+                            item.percent = "0.00%"
+                        } else {
+                            console.log("item.successCount === " + item.successCount);
+                            item.percent = (item.successCount * 100 / item.count).toFixed(2) + "%";
+                        }
+                        v = v.concat(item);
+                    });
+                    console.log("result ===== " + result)
+                    return v;
+                })
+                .then(result=> {
+                    console.log("finalResult ===== " + result)
+                    res.render('hotfixResult', {
+                        title: '修复结果实时监控',
+                        arr: [{sch: 'hotfixResult', ab: 'abs', lib: '', abt: '', log: ''}],
+                        hotfixResult: result
+                    });
+                });
+        })
+    })
 });
 
 

@@ -1,37 +1,30 @@
 <div class="container">
-    <div class="row">
-
-        <div class="col-lg-10">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">{{title}}</h4>
-                </div>
-                <div class="panel-body">
-                    <!-- <h2 class="sub-header">Section title</h2> -->
-                    <div class="table-responsive">
-                        <table class="table table-condensed">
-                            <thead>
-                            <tr>
-                                <th>补丁标识</th>
-                                <th>下载量</th>
-                                <th>补丁成功数</th>
-                                <th>百分比</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {{#each oneUser}}
-                                <tr>
-                                    <td class="imei">{{imei}}</td>
-                                    <td>{{appVersion}}</td>
-                                    <td>{{osVersion}}</td>
-                                    <td>{{net}}</td>
-                                </tr>
-                            {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <div class="panel-heading">
+        <h4 class="panel-title">{{title}}</h4>
+    </div>
+    <div class="panel-body">
+        <!-- <h2 class="sub-header">Section title</h2> -->
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>补丁标识</th>
+                    <th>下载量</th>
+                    <th>补丁成功数</th>
+                    <th>百分比</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each hotfixResult}}
+                    <tr>
+                        <td>{{hashCode}}</td>
+                        <td>{{count}}</td>
+                        <td>{{successCount}}</td>
+                        <td>{{percent}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
         </div>
     </div>
     <!-- footer -->
