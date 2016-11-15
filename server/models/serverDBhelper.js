@@ -20,7 +20,7 @@ hotPatch.selectPatchVersion = function (callback) {
                 callback(err);
             }
 
-            sql = "SELECT hashCode,appVersion,hotfixType,uploadDate,hotUrl FROM hotFix ;";
+            sql = "SELECT * FROM hotFix ;";
 
             console.log('进入到hotFix 数据库-查询语句是: ' + sql);
             connection.query(sql, function (err, rows) {

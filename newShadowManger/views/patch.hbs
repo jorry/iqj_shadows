@@ -1,0 +1,256 @@
+<!-- body -->
+<div class='container'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{title}}</h4>
+        </div>
+        <div class="panel-body">
+            <p class="lead">{{message}}</p>
+
+        </div>
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <tr>
+                    <td>应用名称:{{row.version_name}}</td>
+                    <td>应用版本: {{row.appVersion}}</td>
+                    <td>补丁版本: 1.0</td>
+                </tr>
+
+                <tr>
+                    <td>补丁描述: {{row.description}}</td>
+                    <td>上传时间: {{row.create_date}}</td>
+                    <td id="hashCode">补丁文件: {{row.hashCode}}</td>
+                </tr>
+            </table>
+
+            {{# if status }}    <!--如果为未发布-->
+                {{#if type}}    <!-- 全量-->
+                    <br/>
+                    <br/>
+                    <input type="button" id="normal_publish" value="全量发布"/>
+                {{else}}        <!--灰度-->
+                    <br/>
+                    <input type="button" id="gray_publish" value="灰度发布"/>
+                    <h5>当前处于灰度发布 发布渠道是:{{row.tags}}</h5>
+                {{/if}}
+                <br/>
+                <br/>
+
+                <input type="button" id="del_patch" value="删除补丁"/>
+            {{else}}  <!--如果已发布,那么停止发布-->
+                {{#if type}}<!--如果已发布并且是灰度测试中-->
+                    <input type="button" id="stop_publish" value="停止发布"/>
+                {{else}}
+                    <input type="button" id="stop_publish_gray" value="停止灰度发布"/>
+                {{/if}}
+            {{/if}}
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <!-- <script src="http://v3.bootcss.com/assets/js/docs.min.js"></script> -->
+
+
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://bootboxjs.com/bootbox.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#gray_publish').click(function () {
+                bootbox.confirm({
+                    message: "确定发布灰度测试么??",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        console.log('This was logged in the callback: ' + result);
+
+                        if (!result) {
+                            return;
+                        }
+
+                        var temp = $("#hashCode").text();
+                        var index = temp.indexOf(" ")+1;
+                        var hashCode = temp.substr(index,temp.length);
+                        // 更新数据库
+                        $.StandardPost("/publicManagerModel", {
+                            hashCode : hashCode,
+                            update: 1
+                        });
+
+                    }
+                });
+            });
+
+            $('#stop_publish_gray').click(function () {
+                bootbox.confirm({
+                    message: "确定停止灰度测试么??",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        console.log('This was logged in the callback: ' + result);
+
+                        if (!result) {
+                            return;
+                        }
+
+                        var temp = $("#hashCode").text();
+                        var index = temp.indexOf(" ")+1;
+                        var hashCode = temp.substr(index,temp.length);
+                        // 更新数据库
+                        $.StandardPost("/publicManagerModel", {
+                            hashCode : hashCode,
+                            update: 3
+                        });
+
+                    }
+                });
+            });
+
+            $('#stop_publish').click(function () {
+                bootbox.confirm({
+                    message: "确定停止补丁发布么??",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        console.log('This was logged in the callback: ' + result);
+
+                        if (!result) {
+                            return;
+                        }
+
+                        var temp = $("#hashCode").text();
+                        var index = temp.indexOf(" ")+1;
+                        var hashCode = temp.substr(index,temp.length);
+                        // 更新数据库
+                        $.StandardPost("/publicManagerModel", {
+                            hashCode : hashCode,
+                            update: 4
+                        });
+
+                    }
+                });
+            });
+
+
+
+            $('#normal_publish').click(function () {
+                bootbox.confirm({
+                    message: "确定发布全量测试么??",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        console.log('This was logged in the callback: ' + result);
+
+                        if (!result) {
+                            return;
+                        }
+
+                        var temp = $("#hashCode").text();
+                        var index = temp.indexOf(" ")+1;
+                        var hashCode = temp.substr(index,temp.length);
+                        // 更新数据库
+                        $.StandardPost("/publicManagerModel", {
+                            hashCode : hashCode,
+                            update: 2
+                        });
+
+                    }
+                });
+            });
+
+
+
+            $('#del_patch').click(function () {
+                bootbox.confirm({
+                    message: "确定删除补丁么?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (!result) {
+                            return;
+                        }
+                        var temp = $("#hashCode").text();
+                        var index = temp.indexOf(" ")+1;
+                        var hashCode = temp.substr(index,temp.length);
+                        // 更新数据库
+                        $.StandardPost("/publicManagerModel", {
+                            hashCode : hashCode,
+                            update: 0
+                        });
+
+                    }
+                });
+            });
+            //路由 注册的post 方式   构建post请求
+            $.extend({
+                StandardPost: function (url, args) {
+
+                    var form = $("<form method='post'></form>");
+                    var input;
+                    form.attr({"action": url});
+                    $.each(args, function (key, value) {
+                        input = $("<input type='hidden'>");
+                        input.attr({"name": key});
+                        input.val(value);
+                        form.append(input);
+                    });
+                    form.appendTo(document.body);
+                    form.submit();
+                    document.body.removeChild(form[0]);
+                }
+            });
+        });
+
+
+    </script>
+    <!-- footer -->
+    <div class="footer">
+        <p>© Company 2016</p>
+    </div>
+</div>

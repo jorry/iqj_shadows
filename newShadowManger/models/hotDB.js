@@ -8,7 +8,10 @@ var HotFix = {};
 module.exports = HotFix;
 //app 的名字是用hashCode 为文件名,上传文件后,好像可以获取到文件的名字,然后文件的名字是hashCode, 文件名字后面拼接下载地址
 //以后,要填写上传人名字,上传日期
-HotFix.save = function (hashCode, fileName, fileSize,description, callback) {
+// patch_status  0 未发布;1 已发布
+// patch_type 1. 全量更新,2,灰度测试,4 全量更新H5交互引擎
+
+HotFix.save = function (hashCode, fileName, fileSize, description, patch_status, patch_type, tags, callback) {
     db.getConnection(function (err, connection) {
 
         if (err) {
@@ -22,11 +25,11 @@ HotFix.save = function (hashCode, fileName, fileSize,description, callback) {
             }
             var date = new Date().Format("yyyy-MM-dd");
             var app_id = 1;
-            var version_name = "爱钱进";
+            var version_name = "iqianjin";
             var appVersion = "4.9.3";
-            sql = "INSERT INTO hotFix SET app_id=?,version_name=?,hashCode=?,appVersion=?,patch_size=?,file_hash=?,create_date=?,description=?,hotUrl=?";
+            sql = "INSERT INTO hotFix SET app_id=?,version_name=?,hashCode=?,appVersion=?,patch_size=?,file_hash=?,create_date=?,description=?,hotUrl=?,patch_status=?,patch_type=?,tags=?";
             console.log('2-----进来了吗');
-            connection.query(sql, [app_id,version_name,hashCode,appVersion,fileSize,fileName,date,description,"http://www.baidu.com"], function (err, rows) {
+            connection.query(sql, [app_id, version_name, hashCode, appVersion, fileSize, fileName, date, description, hashCode, patch_status, patch_type, tags], function (err, rows) {
                 if (err) {
                     return connection.rollback(function () {
                         callback(err);
@@ -50,6 +53,94 @@ HotFix.save = function (hashCode, fileName, fileSize,description, callback) {
     });
 };
 
+
+HotFix.managerHotFix = function (status, hashCode, callback) {
+    db.getConnection(function (err, connection) {
+
+        if (err) {
+            return callback(err);
+        }
+
+        var sql;
+        connection.beginTransaction(function (err) {
+            if (status == 0) {  //删除
+
+                sql = "DELETE FROM hotFix WHERE hashCode = '" + hashCode + "';";
+
+            } else if(status == 1 || status == 2){  //发布补丁
+                sql = "UPDATE hotFix SET patch_status = 1  WHERE hashCode = '"+hashCode+"';";
+            }else if (status == 3 || status == 4){
+                sql = "UPDATE hotFix SET patch_status = 0  WHERE hashCode = '"+hashCode+"';";
+            }
+
+            console.log("sql = " + sql)
+            connection.query(sql, [], function (err, rows) {
+                if (err) {
+                    return connection.rollback(function () {
+                        callback(err);
+                    });
+                }
+
+
+                connection.commit(function (err) {
+
+                    if (err) {
+                        return connection.rollback(function () {
+                            callback(err);
+                        });
+                    }
+
+                    connection.end();
+                    callback();
+
+                });
+            });
+        });
+    });
+};
+
+
+HotFix.getHotFixRow = function (hashCode, callback) {
+    db.getConnection(function (err, connection) {
+
+        if (err) {
+            return callback(err);
+        }
+
+        var sql;
+        connection.beginTransaction(function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            sql = "SELECT * FROM hotFix WHERE hashCode = '" + hashCode + "';";
+
+            connection.query(sql, [], function (err, rows) {
+                if (err) {
+                    return connection.rollback(function () {
+                        callback(err);
+                    });
+                }
+
+
+                connection.commit(function (err) {
+
+                    if (err) {
+                        return connection.rollback(function () {
+                            callback(err);
+                        });
+                    }
+
+                    connection.end();
+                    callback(undefined, rows[0]);
+
+                });
+            });
+        });
+    });
+};
+
+
 HotFix.getHotFixRows = function (callback) {
     db.getConnection(function (err, connection) {
 
@@ -72,6 +163,7 @@ HotFix.getHotFixRows = function (callback) {
                     });
                 }
 
+
                 connection.commit(function (err) {
 
                     if (err) {
@@ -81,7 +173,7 @@ HotFix.getHotFixRows = function (callback) {
                     }
 
                     connection.end();
-                    callback(undefined,rows);
+                    callback(undefined, rows);
 
                 });
             });

@@ -22,7 +22,7 @@
                         </div>
 
                         <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
-
+                        <input type="hidden" name="patch_type"  value="1"/>
 
                     </form>
                 </div>
@@ -41,14 +41,7 @@
             <h4 class="panel-title">hotfix</h4>
         </div>
         <div class="Login-box">
-            <h5>bug修复是一个非常严肃的问题,.目前支持全量修复或者根据app 版本进行修复, 补丁是基于一个基础的安装包进行的</h5>
-            <div class="row search-box-2 text-center" style="margin-top: 20px">
-                <div id="radioselect" class='col-lg-6 col-lg-offset-3 '>
-                    <input type='radio' name="kind" id="1" value="all" checked="checked"/><label for="1">全量bug修复</label>
-                    <input type='radio' name="kind" id="3" value="eng"/><label for="3">app版本修复bug</label>
-                </div>
-            </div>
-
+            <h5 style="margin-left: 20px">bug修复是一个非常严肃的问题,.目前支持全量修复或者根据app 版本进行修复, 补丁是基于一个基础的安装包进行的</h5>
         </div>
 
         <div class="container-fluid">
@@ -76,17 +69,19 @@
                         <th>补丁版本</th>
                         <th>补丁大小</th>
                         <th>发布状态</th>
+                        <th>补丁类型</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     {{#each rows}}
                         <tr>
-                            <td class="imei">{{hashCode}}</td>
+                            <td class="hashCode">{{hashCode}}</td>
                             <td>{{patch_size}}k</td>
-                            <td>已发布</td>
+                            <td>{{patch_status}}</td>
+                            <td>{{patch_type}}</td>
                             <td>
-                                <button class="detail btn btn-sm">查看详情</button>
+                                <button class="patch_detail btn btn-sm">查看详情</button>
                             </td>
                         </tr>
                     {{/each}}
@@ -95,28 +90,13 @@
             </div>
         </div>
 
-        <!--<div>-->
 
-        <!--&lt;!&ndash;<div class="panel-body ">&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="col-lg-4 col-lg-offset-4" style="margin-top: 20px">&ndash;&gt;-->
-        <!--&lt;!&ndash;<button class="uploadHotFixConfirm btn btn-lg btn-primary btn-block" type="submit">发布</button>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--</div>-->
-
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-        <!-- <script src="http://v3.bootcss.com/assets/js/docs.min.js"></script> -->
-
-
         <!-- Bootstrap Core CSS -->
         <link href="../public/css/bootstrap.min.css" rel="stylesheet">
-
         <!-- Custom CSS -->
         <link href="../public/css//sb-admin.css')" rel="stylesheet">
-
 
         <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
         <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -182,7 +162,7 @@
         </script>
         <!-- footer -->
         <div class="footer">
-            <p>© Company 2016</p>
+            <p style="margin-left: 20px">© Company 2016</p>
         </div>
     </div>
 </div>

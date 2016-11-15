@@ -10,7 +10,7 @@ var config = {
 	password:'liujiawei',//密码
 	db_host:'118.178.87.5',//主机
 	db_port: 3306,//端口
-	db_name:'shadowsApp'//数据库名
+	db_name:'shadowsapp'//数据库名
 }
 
 module.exports = config;
