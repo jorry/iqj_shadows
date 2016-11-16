@@ -8,43 +8,6 @@ var HotFix = {};
 module.exports = HotFix;
 //app 的名字是用hashCode 为文件名,上传文件后,好像可以获取到文件的名字,然后文件的名字是hashCode, 文件名字后面拼接下载地址
 //以后,要填写上传人名字,上传日期
-HotFix.save = function (hashCode, appVersion, hotfixType, callback) {
-    db.getConnection(function (err, connection) {
-
-        if (err) {
-            return callback(err);
-        }
-
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-            var date = new Date().Format("yyyy-MM-dd");
-            sql = "INSERT INTO hotFix (appVersion,hashCode,hotfixType,uploadDate,hotUrl) VALUES ('" + hashCode + "','" + appVersion + "','" + hotfixType + "','" + "','" + date + "','" + 'http://www.iqianjin.com' + "');";
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback();
-
-                });
-            });
-        });
-    });
-};
 
 // 根据appUid 和app版本,找到对应的 补丁列表
 HotFix.patchManager = function (app_uid,appVersion,callback) {

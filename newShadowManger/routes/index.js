@@ -369,6 +369,7 @@ router.get('/app_list', function (req, res, next) {
         console.log('----应用列表 ' + rows);
         res.render('app_list', {
             title: 'app应用列表',
+            arr: [{sch: 'app_list', ab: 'abs', lib: '', abt: '', log: ''}],
             rows: rows
         });
     });
