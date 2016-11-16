@@ -2,6 +2,9 @@ var express = require('express');
 //引入multer模块
 var multer = require('multer');
 
+var crypto = require('crypto');//hashCode
+
+
 var router = express.Router();
 var path = require('path');
 
@@ -9,7 +12,11 @@ var hotFix = require('../models/hotFix');
 
 var hotDB = require("../models/hotDB");
 
+var AppUtil = require('../models/AppIdUtil');
+
 var appInfoDB = require("../models/appInfoDB");
+
+var appVersionInfo = require('../models/versionDB');
 
 var fs = require("fs");
 
@@ -20,32 +27,33 @@ var createFolder = function (folder) {
     } catch (e) {
         fs.mkdirSync(folder);
     }
-};
+    ;
+}
 
 //生成一个文件,但是没有后缀
-var uploadFolder = '/Users/iqianjin-liujiawei/Desktop/shadowsManger/git/fileServer/http-server/public';
+var uploadFolder = '/Users/iqianjin-liujiawei/Desktop/shadowsManger/git/myFileServer/http-server';
 
-createFolder(uploadFolder);
-
-var upload = multer({dest: uploadFolder});
-
-
-////指定apk名字
-//var storage = multer.diskStorage({
-//    destination: function (req, file, cb) {
-//        cb(null, uploadFolder);    // 保存的路径，备注：需要自己创建
-//    },
-//    filename: function (req, file, cb) {
-//        // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
-//        console.log('---'+file.filename);
-//        console.log('---'+file);
+//createFolder(uploadFolder);
 //
-//        cb(null, file.originalname);
-//    }
-//});
-//
-//// 通过 storage 选项来对 上传行为 进行定制化
-//var upload = multer({ storage: storage })
+//var upload = multer({dest: uploadFolder});
+
+
+//指定apk名字
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadFolder);    // 保存的路径，备注：需要自己创建
+    },
+    filename: function (req, file, cb) {
+        // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
+        console.log('---' + file.filename);
+        console.log('---' + file);
+
+        cb(null, file.originalname);
+    }
+});
+
+// 通过 storage 选项来对 上传行为 进行定制化
+var upload = multer({storage: storage})
 
 
 /* GET home page. */
@@ -54,36 +62,77 @@ router.get('/', function (req, res, nnext) {
 });
 
 
-//单位件上传
+router.get('/createVersion', function (req, res, next) {
+
+    var appVersion = req.query.appUid;
+
+    var versionName = req.query.versionName;
+
+    appVersionInfo.insertVersionDB(appVersion, versionName.replace('.', '').replace('.', ''), function (err) {
+        if (err) {
+            res.render('publicManagermodel', {
+                title: '创建app版本',
+                message: err
+            });
+            return;
+        } else {
+            res.render('appDetail', {
+                appUid: appVersion
+            });
+        }
+    });
+});
+
+//补丁上传
 //注意上传界面中的 <input type="file" name="avatar"/>中的name必须是下面代码中指定的名称
 router.post('/singleUpload', upload.single('file'), function (req, res, next) {
 
     var file = req.file;
-    var hashCode = file.filename;
-    var fileSize = file.size;
-    var fileName = file.originalname;
 
-    var description = req.body.description;
-    var patch_type = req.body.patch_type;
-    var patch_status = 0;
-    var tags = req.body.tags;
+    var hotPathFilePatch = uploadFolder + '/' + file.originalname;
+    console.log('文件地址:' + hotPathFilePatch)
 
-    hotDB.save(hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
-        console.log('err' + err);
-        if (err) {
-            next(err);
-        }
-        res.redirect('/hotfixAddDB');
+    var rs = fs.createReadStream(hotPathFilePatch);
+
+    var hash = crypto.createHash('md5');
+    rs.on('data', hash.update.bind(hash));
+
+    rs.on('end', function () {
+        var hashCode = hash.digest('hex');
+
+
+        var hashCode = hashCode;
+        var fileSize = file.size;
+        var fileName = file.originalname;
+
+        var description = req.body.description;
+        var patch_type = req.body.patch_type;
+        var appVersion = req.body.appVersion;
+        var appUid = req.body.appUid;
+
+        console.log('appVersion'+appVersion+'appUid = ' + appUid);
+
+        var patch_status = 0;
+        var tags = req.body.tags;
+
+        hotDB.save(appUid,appVersion,fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
+            console.log('err' + err);
+            if (err) {
+                next(err);
+            }
+            res.redirect('/hotfixAddDB');
+        });
+
+        console.log('文件类型：%s', file.mimetype);
+        console.log('原始文件名：%s', file.originalname);
+        console.log('新的文件名：%s', file.fieldname);
+
+        console.log('文件大小：%s', file.size);
+        console.log('文件保存路径：%s', file.path);
+        console.log(req.file);
+        console.log(req.body);
+
     });
-
-    console.log('文件类型：%s', file.mimetype);
-    console.log('原始文件名：%s', file.originalname);
-    console.log('新的文件名：%s', file.fieldname);
-
-    console.log('文件大小：%s', file.size);
-    console.log('文件保存路径：%s', file.path);
-    console.log(req.file);
-    console.log(req.body);
 
 
 });
@@ -125,72 +174,16 @@ router.post('/graySettingPost', function (req, res, nnext) {
 
 });
 
-//灰度代码回滚界面,点击列表item, 调用这里
-router.post('/reverSettingResult', function (req, res, next) {
-    var hashCode = req.body.hashCode;
-    console.log('-----reverSettingResult');
-    hotFix.graySettingReset(hashCode, 2, function (err) {
-        if (err) {
-            return next(err);
-        }
-
-        res.render('revert_return', {
-            title: '已设置',
-            message: '设置完成'
-        });
-    });
-
-
-});
-
-
 router.get('/hotfixEngine', function (req, res, next) {
-    //hotFix.save("4.5.1", "1", function (err) {
-    //    if (err) {
-    //        return next(err);
-    //    }
-    //
-    //});
+
     res.render('hotfixEngine', {
         title: '修复H5交互引擎'
     });
 });
 
 
-//router.get('/hotfixRevert', function (req, res, next) {
-//    hotFix.hotReverListView(function (err, rows) {
-//        if (err) {
-//            return next(err);
-//        }
-//
-//        rows.forEach(function (row) {
-//            console.log('' + row.hotFixType);
-//            if (row.hotFixType == 1) {
-//                row.hotFixType = '热修复';
-//            } else if (row.hotFixType == 2) {
-//                row.hotFixType = 'a/b Testting';
-//            } else if (row.hotFixType == 5) {
-//                row.hotFixType == '单用户行为';
-//            } else if (row.hotFixType == 3) {
-//                row.hotFixType = '灰度功能设置';
-//            }
-//
-//        });
-//        res.render('hotfixRevert', {
-//            title: '设置代码回滚',
-//            datas: rows
-//        });
-//    });
-//});
-
-
 router.get('/hotfixResult', function (req, res, next) {
-    //hotFix.save("4.5.1", "1", function (err) {
-    //    if (err) {
-    //        return next(err);
-    //    }
-    //
-    //});
+
     res.render('hotfixResult', {
         title: '补丁完成查看'
     });
@@ -206,12 +199,8 @@ function addSaveHot(hashCode, hotFixType, revert) {
 router.get('/hotfixUploadFinish', function (req, res, next) {
     addSaveHot('10002', 1, 1)
     console.log('----hotfixUploadFinish--跳转,进来了吗');
-    //hotFix.save("4.5.1", "1", function (err) {
-    //    if (err) {
-    //        return next(err);
-    //    }
-    //
-    //});
+
+
     res.render('hotfixUploadFinish', {
         title: '热修复发布完成'
     });
@@ -241,19 +230,47 @@ router.get('/abSetting', function (req, res, next) {
 });
 
 
+router.get('/appDetail', function (req, res, next) {
+
+    var appUid = req.query.appUid;
+
+    appVersionInfo.selectAll(appUid,function (err, rows) {
+        if (err) {
+            console.error(err);
+            return next(err);
+        }
+        var versionArray = rows;
+        console.log('appId = '+appUid)
+        appInfoDB.getAppDetail(appUid, function (err, row) {
+            console.log('appName = ' + row.appName);
+            if (row.length == 1) {
+                res.render('appDetail', {
+                    title: 'appDetail',
+                    app: row[0],
+                    versionArray: versionArray
+                });
+            } else {
+                console.log(appUid + "没有找到对应的app");
+            }
+
+        });
+    });
+
+
+});
+
 
 router.get('/createApp', function (req, res, next) {
-
 
     var appName = req.query.appname;
     var des = req.query.description;
     var platform = 'Android';
-    var uid = 1;
+    var uid = AppUtil.appUid();
 
-    console.log(appName+' createApp '+des);
+    console.log(uid);
 
     appInfoDB.insertAppInfo(appName, des, uid, platform, function (err) {
-        if (err){
+        if (err) {
             console.error(err);
             return next(err);
         }
@@ -262,9 +279,55 @@ router.get('/createApp', function (req, res, next) {
     });
 });
 
+router.get('/patchManager', function (req, res, next) {
+
+    var appVersion = req.query.versionName;
+    var appUid = req.query.appVersion;
+
+    console.log(appUid+"  index "+appVersion);
+
+    var rand1 = Math.floor(Math.random() * 10 + 1);
+
+    console.log("rand1 = " + rand1);
+    hotFix.patchManager(appUid,appVersion,function (err, rows) {
+
+        console.log('JSON', 'json = ' + rows);
+
+        rows.forEach(function (row) {
+            if (row.patch_type == 1) {
+                row.patch_type = '全量更新';
+            } else if (row.patch_type == 0) {
+                row.patch_type = '灰度更新';
+            } else if (row.patch_type == 4) {
+                row.patch_type = '修复h5引擎';
+            }
+
+            if (row.patch_status == 0) {
+                row.patch_status = '未发布';
+            } else if (row.patch_status == 1) {
+                row.patch_status = '已发布';
+            }
+
+        });
+
+        res.render('index', {
+            title: 'index',
+            arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
+            rows: rows,
+            appUid: appUid,
+            appVersion: appVersion
+
+        });
+    });
+
+});
+
+
 //补丁列表
 router.get('/index', function (req, res, next) {
 
+
+    var rand1 = Math.floor(Math.random() * 10 + 1);
     hotFix.getHotFixRows(function (err, rows) {
 
         console.log('JSON', 'json = ' + rows);
@@ -299,18 +362,25 @@ router.get('/app_list', function (req, res, next) {
 
     console.log('----app_list--跳转,进来了吗');
 
-    appInfoDB.selectAll(function(err,rows){
-        if (err){
+    appInfoDB.selectAll(function (err, rows) {
+        if (err) {
             return next(err);
         }
-        console.log('----应用列表 '+rows);
+        console.log('----应用列表 ' + rows);
         res.render('app_list', {
             title: 'app应用列表',
-            rows:rows
+            rows: rows
         });
     });
 });
 
+router.get('/app', function (req, res, next) {
+
+    console.log('----app_list--跳转,进来了吗');
+    res.render('app', {
+        title: 'app应用列表',
+    });
+});
 
 
 // 补丁详情,用于补丁的发布操作

@@ -75,7 +75,7 @@
                             <td>{{descriiption_app}}</td>
                             >
                             <td>
-                                <button ID="detail" class="detail btn btn-sm">管理</button>
+                                <button  class="appDetail btn btn-sm">管理</button>
                             </td>
                         </tr>
                     {{/each}}
@@ -103,6 +103,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+
             $("#create_app").click(function () {
                 if ($("#app-name").val().length == 0) {
                     $("#err_msg").text('请输入应用名称');

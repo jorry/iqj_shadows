@@ -46,6 +46,49 @@ HotFix.save = function (hashCode, appVersion, hotfixType, callback) {
     });
 };
 
+// 根据appUid 和app版本,找到对应的 补丁列表
+HotFix.patchManager = function (app_uid,appVersion,callback) {
+    db.getConnection(function (err, connection) {
+
+        if (err) {
+            return callback(err);
+        }
+
+        var sql;
+        connection.beginTransaction(function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            sql = "SELECT * FROM hotFix WHERE app_id = '"+app_uid+"' and appVersion = '"+appVersion+"';";
+            console.log('patchManager = '+sql);
+
+            connection.query(sql, [], function (err, rows) {
+                if (err) {
+                    return connection.rollback(function () {
+                        callback(err);
+                    });
+                }
+
+                connection.commit(function (err) {
+
+                    if (err) {
+                        return connection.rollback(function () {
+                            callback(err);
+                        });
+                    }
+
+                    connection.end();
+                    callback(undefined,rows);
+
+                });
+            });
+        });
+    });
+};
+
+
+//应用名称,应用版本
 HotFix.getHotFixRows = function (callback) {
     db.getConnection(function (err, connection) {
 
@@ -87,54 +130,6 @@ HotFix.getHotFixRows = function (callback) {
 
 
 
-//灰度重置 功能,重置成功后,还需要重置下hot那个表
-HotFix.graySettingReset = function (hashCode,revert,callback) {
-
-    db.getConnection(function (err, connection) {
-
-        if (err) {
-            return callback(err);
-        }
-
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "UPDATE graySetting SET revert = "+revert+" WHERE hashCode = '"+hashCode+"';";
-            connection.query(sql,[],function(err,rows){
-
-                if (err) {
-                    return callback(err);
-                }
-
-                sql = "UPDATE hot SET revert = "+revert+" WHERE hasoCode = '"+hashCode+"';";
-                connection.query(sql,[],function(err,rows){
-                    if (err) {
-                        return callback(err);
-                    }
-                    connection.commit(function (err) {
-
-                        if (err) {
-                            return connection.rollback(function () {
-                                callback(err);
-                            });
-                        }
-
-                        connection.end();
-                        callback();
-
-                    });
-
-                });
-
-            });
-
-
-        });
-    });
-}
 
 //设置灰度功能,同一时间,只能有一个灰度
 HotFix.graySetting = function (hashCode, appVersion, hotfixType, us, callback) {

@@ -23,6 +23,9 @@
 
                         <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
                         <input type="hidden" name="patch_type"  value="1"/>
+                        <input type="hidden" name="appUid"  value={{appUid}}/>
+                        <input type="hidden" name="appVersion"  value={{appVersion}}/>
+
 
                     </form>
                 </div>
@@ -41,6 +44,9 @@
             <h4 class="panel-title">hotfix</h4>
         </div>
         <div class="Login-box">
+            <h5 style="margin-left: 20px">使用说明: 1. 此界面用于上传补丁包,但是没有真正的发布出去</h5>
+            <h5 style="margin-left: 20px">2. 需要在补丁详情界面 手动点击上传</h5>
+
             <h5 style="margin-left: 20px">bug修复是一个非常严肃的问题,.目前支持全量修复或者根据app 版本进行修复, 补丁是基于一个基础的安装包进行的</h5>
         </div>
 
@@ -155,6 +161,28 @@
                             window.location.href = window.location.href;
                         }, 5000);
                     });
+
+                    dialog.init(function () {
+                        jQuery.ajax({
+                            url: "/createApp?appname=" + $("#app-name").val() + "&description=" + $("#app-desc").val(),
+                            type: 'get',
+                            success: function (res, textStatus, jqXHR) {
+                                dialog.find('.bootbox-body').html('添加成功!');
+                                setTimeout(function () {
+                                    window.location.href = window.location.href;
+                                }, 500);
+//                            if (res.code == 200) {    //todo
+//
+//                            } else {
+//                                dialog.find('.bootbox-body').html("<font color='red'>" + res.message + "</font>");
+//                            }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                dialog.find('.bootbox-body').html("<font color='red'>系统异常!</font>");
+                            }
+                        });
+                    });
+
                     $("#create_patch_form").submit();
                 });
             });

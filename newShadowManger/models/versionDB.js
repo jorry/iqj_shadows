@@ -2,51 +2,13 @@
  * Created by iqianjin-liujiawei on 16/11/11.
  */
 var db = require('./dbhelper');
-var versionDB  = require('./versionDB');
-var appInfoDB = {};
 
-module.exports = appInfoDB;
+var versionDB = {};
 
-appInfoDB.getAppDetail = function(appUid,callback){
-    db.getConnection(function (err, connection) {
+module.exports = versionDB;
 
-        if (err) {
-            return callback(err);
-        }
-        console.log(appUid+'1-----进来了吗');
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
 
-            sql = "SELECT appName,platfrom,uid,descriiption_app,create_at FROM appInfo WHERE uid=?;";
-            console.log('2-----进来了吗');
-            connection.query(sql,[appUid], function (err, row) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-                console.log('3-----进来了吗'+row);
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    console.log('4-----进来了吗');
-                    connection.end();
-                    callback(undefined,row);
-
-                });
-            });
-        });
-    });
-};
-
-appInfoDB.selectAll = function(callback){
+versionDB.selectAll = function(appUid,callback){
     db.getConnection(function (err, connection) {
 
         if (err) {
@@ -60,9 +22,11 @@ appInfoDB.selectAll = function(callback){
             }
 
             var date = new Date().Format("yyyy-MM-dd");
+            console.log('日期函数:'+date);
 
-            sql = "SELECT * FROM appInfo;";
-            console.log('2-----进来了吗');
+            sql = "SELECT * FROM version_info WHERE app_uid= '"+appUid+"';";
+
+            console.log('2-----进来了吗'+sql);
             connection.query(sql,[], function (err, rows) {
                 if (err) {
                     return connection.rollback(function () {
@@ -87,7 +51,7 @@ appInfoDB.selectAll = function(callback){
     });
 };
 
-appInfoDB.insertAppInfo = function(appName,platform,u_id,destination,callback){
+versionDB.insertVersionDB = function(appId,version_name,callback){
     db.getConnection(function (err, connection) {
 
         if (err) {
@@ -100,11 +64,11 @@ appInfoDB.insertAppInfo = function(appName,platform,u_id,destination,callback){
                 return callback(err);
             }
 
-            var date = new Date().Format("yyyy-MM-dd");
+            var date  = new Date().Format('yyyy-MM-dd HH:mm:ss');
 
-            sql = "INSERT INTO appInfo SET appName=?,platfrom=?,uid=?,descriiption_app=?,create_at=?";
+            sql = "INSERT INTO version_info SET app_uid=?,version_name=?,created_at=?;";
             console.log('2-----进来了吗');
-            connection.query(sql, [appName, platform, u_id, destination, date], function (err, rows) {
+            connection.query(sql, [appId, version_name, date], function (err, rows) {
                 if (err) {
                     return connection.rollback(function () {
                         callback(err);
@@ -129,15 +93,18 @@ appInfoDB.insertAppInfo = function(appName,platform,u_id,destination,callback){
 };
 
 
-//日期格式化函数
-Date.prototype.Format = function (fmt) {
+Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
         "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate() //日
-
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
-};
+}

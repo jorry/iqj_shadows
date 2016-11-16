@@ -11,7 +11,7 @@ module.exports = HotFix;
 // patch_status  0 未发布;1 已发布
 // patch_type 1. 全量更新,2,灰度测试,4 全量更新H5交互引擎
 
-HotFix.save = function (hashCode, fileName, fileSize, description, patch_status, patch_type, tags, callback) {
+HotFix.save = function (appId,appVersion,hotPathFilePatch,hashCode, fileName, fileSize, description, patch_status, patch_type, tags, callback) {
     db.getConnection(function (err, connection) {
 
         if (err) {
@@ -23,32 +23,45 @@ HotFix.save = function (hashCode, fileName, fileSize, description, patch_status,
             if (err) {
                 return callback(err);
             }
-            var date = new Date().Format("yyyy-MM-dd");
-            var app_id = 1;
-            var version_name = "iqianjin";
-            var appVersion = "4.9.3";
-            sql = "INSERT INTO hotFix SET app_id=?,version_name=?,hashCode=?,appVersion=?,patch_size=?,file_hash=?,create_date=?,description=?,hotUrl=?,patch_status=?,patch_type=?,tags=?";
-            console.log('2-----进来了吗');
-            connection.query(sql, [app_id, version_name, hashCode, appVersion, fileSize, fileName, date, description, hashCode, patch_status, patch_type, tags], function (err, rows) {
-                if (err) {
+
+            var patchVersion ;
+            sql = "SELECT id FROM hotFix GROUP BY id DESC";
+            connection.query(sql,[],function(err,rows){
+                if (err){
                     return connection.rollback(function () {
                         callback(err);
                     });
                 }
-                console.log('3-----进来了吗');
-                connection.commit(function (err) {
-
+                if (rows.length == 0){
+                    patchVersion = 1;
+                }else{
+                    patchVersion = rows[0].id+1;
+                }
+                var iqianjin = 'iqianjin';
+                console.log('---patchVersion---'+patchVersion)
+                var date = new Date().Format("yyyy-MM-dd");
+                sql = "INSERT INTO hotFix SET app_id ='"+appId+"',version_name='"+iqianjin+"',hashCode='"+hashCode+"',appVersion='"+appVersion+"',patch_size='"+fileSize+"',file_hash='"+fileName+"',create_date='"+date+"',description='"+description+"',hotUrl='"+hotPathFilePatch+"',patch_status='"+patch_status+"',patch_type='"+patch_type+"',tags='"+tags+"',patchVersion='"+patchVersion+"';";
+                connection.query(sql, [], function (err) {
                     if (err) {
                         return connection.rollback(function () {
                             callback(err);
                         });
                     }
-                    console.log('4-----进来了吗');
-                    connection.end();
-                    callback();
+                    console.log('3-----进来了吗');
+                    connection.commit(function (err) {
 
+                        if (err) {
+                            return connection.rollback(function () {
+                                callback(err);
+                            });
+                        }
+                        console.log('4-----进来了吗');
+                        connection.end();
+                        callback();
+
+                    });
                 });
-            });
+            })
         });
     });
 };

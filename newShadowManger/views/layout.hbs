@@ -81,6 +81,41 @@
         });
     }
 
+    $(document).ready(function () {
+
+
+        $(".versionDetail").each(function (index) {
+
+            $(".versionDetail").eq(index).click(function () {
+
+                var versionName = $(".version_name_item").eq(index).text();
+
+                var temp = $("#APP_ID").text();
+                var index_str = temp.indexOf(": ") + 2;
+                var appId = temp.substr(index_str, temp.length);
+
+                var url = '/patchManager' + "?versionName=" + versionName+"&appVersion="+appId;
+
+                //跳转结果页 GET
+                document.location.href = url;
+            });
+        });
+    });
+
+
+    $(document).ready(function () {
+        $(".appDetail").each(function (index) {
+
+            $(".appDetail").eq(index).click(function () {
+
+                var appUid = $(".appUid").eq(index).text();
+                var url = '/appDetail' + "?appUid=" + appUid;
+                //跳转结果页 GET
+                document.location.href = url;
+            });
+        });
+    });
+
 
 
     $(document).ready(function () {
@@ -95,6 +130,8 @@
             });
         });
     });
+
+
 
     $(document).ready(function () {
         $(".patch_detail").each(function (index) {
@@ -122,7 +159,7 @@
 
     $(document).ready(function () {
         $(".login").click(function () {
-            document.location.href = '/index';
+            document.location.href = '/app_list';
         });
     });
 
