@@ -203,6 +203,7 @@ HotFix.hotReverListView = function (callback) {
                         callback(err);
                     })
                 }
+                connection.end;
                 callback(undefined, rows);
             })
         })
@@ -231,6 +232,7 @@ HotFix.addOneUserStep = function (callback) {
                         callback(err);
                     })
                 }
+                connection.end;
                 callback(undefined, rows);
             })
         })
@@ -288,7 +290,7 @@ HotFix.getOneUserStep = function (imei, callback) {
                 callback(err);
             }
 
-            sql = "SELECT * FROM addOneUserStep WHERE imei = '" + imei + "';";
+            var sql = "SELECT * FROM addOneUserStep WHERE imei = '" + imei + "';";
 
             console.log('进入到   addOneUserStep 数据库-查询语句是: ' + sql);
             connection.query(sql, function (err, rows) {
@@ -299,11 +301,80 @@ HotFix.getOneUserStep = function (imei, callback) {
                     })
                 }
                 console.log('进入到   addOneUserStep step: ' + rows[0].step);
+                connection.end;
                 callback(undefined, rows[0].step);
             })
         })
     });
 };
+
+HotFix.getHotFixResult = function (callback) {
+
+    db.getConnection(function (err, connection) {
+        if (err) {
+            return;
+        }
+        connection.beginTransaction(function (err) {
+            if (err) {
+                return;
+            }
+
+            var sql = "SELECT distinct hashCode FROM hotfix ;";
+            console.log('进入到   hotfix 数据库-查询语句是: ' + sql)
+            connection.query(sql, function (err, rows) {
+                console.log('进入到   hotfix  数据库-查询结果: err ' + err + "   rows = " + rows);
+                if (err) {
+                    return connection.rollback(function () {
+                        callback(err);
+                    });
+                }
+                connection.end;
+                callback(undefined, rows);
+            })
+        });
+    })
+};
+
+HotFix.getHotFixCountByHashCode = function(hashCode, callback) {
+    db.getConnection(function (err, connection) {
+        if (err) {
+            return;
+        }
+        var sql = "SELECT COUNT(*) AS count FROM iqj_apphotfixstate where hashCodeApp = '"+hashCode+"' ;";
+        console.log('进入到   iqj_apphotfixstate 数据库-查询语句是: ' + sql)
+        connection.query(sql, function (err, rows) {
+            console.log('进入到   iqj_apphotfixstate  数据库-查询结果: err ' + err + "   rows = " + rows);
+            if (err) {
+                return connection.rollback(function () {
+                    callback(err);
+                });
+            }
+            connection.end;
+            callback(undefined, rows[0].count);
+        })
+    })
+}
+
+HotFix.getHotFixCountSuccess = function(hashCode, callback) {
+    db.getConnection(function (err, connection) {
+        if (err) {
+            return;
+        }
+
+        var sql = "SELECT COUNT(*) AS count FROM iqj_apphotfixstate where hashCodeApp = '"+hashCode+"' and appState = '1' ;";
+        console.log('进入到   iqj_apphotfixstate 数据库-查询语句是: ' + sql)
+        connection.query(sql, function (err, rows) {
+            console.log('进入到   iqj_apphotfixstate  数据库-查询结果: err ' + err + "   rows = " + rows);
+            if (err) {
+                return connection.rollback(function () {
+                    callback(err);
+                });
+            }
+            connection.end;
+            callback(undefined, rows[0].count);
+        })
+    })
+}
 
 
 //日期格式化函数
