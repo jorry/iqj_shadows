@@ -37,11 +37,6 @@
         <!-- Page Heading -->
         <div class="row">
             <div class="col-lg-12">
-                <h2 class="page-header">
-                    应用管理
-                    <small></small>
-                </h2>
-
                 <p>
                     <a href="./app_list">首页</a>
                 </p>
@@ -82,9 +77,7 @@
             {{#each versionArray}}
                 <tr>
                     <td class="version_name_item">{{version_name}}</td>
-                    <td>{{appVersion}}</td>
                     <td>{{created_at}}</td>
-                    <td>{{net}}</td>
                     <td>
                         <button id="versionDetail" class="versionDetail btn btn-sm">查看详情</button>
                     </td>

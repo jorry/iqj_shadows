@@ -1,6 +1,49 @@
 <!-- body -->
 <div class='container'>
 
+    <div class="modal fade" id="grayExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <form id="create_patch_form_gray" action="/singleUpload" method="post"
+                          enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="description" class="form-control-label">渠道号:</label>
+                            <input type="text" class="form-control us" id="tags" name="tags" placeholder="请输入渠道号"
+                                   required=""
+                                   autofocus="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="form-control-label">补丁描述:</label>
+                            <input type="text" class="form-control" id="descriptionGray" name="description"
+                                   maxlength="32"
+                                   placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patch_file_gray" class="form-control-label">补丁文件:</label>
+                            <input type="file" class="form-control" id="patch_file_gray" name="file">
+                        </div>
+
+                        <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
+                        <input type="hidden" name="patch_type" value="0"/>
+                        <input type="hidden" name="gray_appUid" value={{appUid}}>
+                        <input type="hidden" name="gray_appVersion" value={{appVersion}}/>
+                    </form>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="create_patch_gray">创建</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -22,9 +65,9 @@
                         </div>
 
                         <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
-                        <input type="hidden" name="patch_type"  value="1"/>
-                        <input type="hidden" name="appUid"  value={{appUid}} >
-                        <input type="hidden" name="appVersion"  value={{appVersion}}/>
+                        <input type="hidden" name="patch_type" value="1"/>
+                        <input type="hidden" name="appUid" value={{appUid}}>
+                        <input type="hidden" name="appVersion" value={{appVersion}}/>
 
 
                     </form>
@@ -60,6 +103,11 @@
                                 data-target="#exampleModal" data-whatever="@getbootstrap">上传补丁
                         </button>
                     </p>
+                    <p>
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                data-target="#grayExampleModal" data-whatever="@getbootstrap">灰度测试
+                        </button>
+                    </p>
 
                 </div>
             </div>
@@ -72,7 +120,7 @@
                 <table class="table table-condensed">
                     <thead>
                     <tr>
-                        <th>补丁版本</th>
+                        <th>补丁唯一标示</th>
                         <th>补丁大小</th>
                         <th>发布状态</th>
                         <th>补丁类型</th>
@@ -96,7 +144,6 @@
             </div>
         </div>
 
-
         <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
         <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
         <!-- Bootstrap Core CSS -->
@@ -112,31 +159,40 @@
         <script type="text/javascript">
             $(document).ready(function () {
 
-                $(".uploadHotFixConfirm").click(function () {
-                    bootbox.confirm({
-                        message: "确定这个补丁吗?",
-                        buttons: {
-                            confirm: {
-                                label: 'Yes',
-                                className: 'btn-success'
-                            },
-                            cancel: {
-                                label: 'No',
-                                className: 'btn-danger'
-                            }
-                        },
-                        callback: function (result) {
-                            if (!result) {
-                                return;
-                            }
+                $("#create_patch_gray").click(function () {
+                    if ($("#tags").val().length == 0) {
+                        $("#err_msg").text('请填写渠道号');
+                        return
+                    }
+                    if ($("#descriptionGray").val().length == 0) {
+                        $("#err_msg").text('请输入补丁描述');
+                        return
+                    }
+                    if ($("#patch_file_gray").val().length == 0) {
+                        $("#err_msg").text('请选择补丁文件');
+                        return
+                    }
 
-                        },
+                    if (!$("#patch_file_gray").val().endsWith('.apk') && !$("#patch_file_gray").val().endsWith('.jar') && !$("#patch_file_gray").val().endsWith('.zip') && !$("#patch_file_gray").val().endsWith('.dex')) {
+                        $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
+                        $("#patch_file_gray").val('');
+                        return;
+                    }
+                    $("#err_msg").text('');
+                    var dialog = bootbox.dialog({
+                        message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
                     });
-
+                    dialog.init(function () {
+                        setTimeout(function () {
+                            window.location.href = window.location.href;
+                        }, 5000);
+                    });
+                    $("#create_patch_form_gray").submit();
                 });
 
 
                 $("#create_patch").click(function () {
+
                     if ($("#description").val().length == 0) {
                         $("#err_msg").text('请输入补丁描述');
                         return
@@ -161,28 +217,6 @@
                             window.location.href = window.location.href;
                         }, 5000);
                     });
-
-                    dialog.init(function () {
-                        jQuery.ajax({
-                            url: "/createApp?appname=" + $("#app-name").val() + "&description=" + $("#app-desc").val(),
-                            type: 'get',
-                            success: function (res, textStatus, jqXHR) {
-                                dialog.find('.bootbox-body').html('添加成功!');
-                                setTimeout(function () {
-                                    window.location.href = window.location.href;
-                                }, 500);
-//                            if (res.code == 200) {    //todo
-//
-//                            } else {
-//                                dialog.find('.bootbox-body').html("<font color='red'>" + res.message + "</font>");
-//                            }
-                            },
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                dialog.find('.bootbox-body').html("<font color='red'>系统异常!</font>");
-                            }
-                        });
-                    });
-
                     $("#create_patch_form").submit();
                 });
             });

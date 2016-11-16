@@ -9,7 +9,7 @@
                     <form id="create_patch_form" action="/singleUpload" method="post"
                           enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="description" class="form-control-label" >渠道号:</label>
+                            <label for="description" class="form-control-label">渠道号:</label>
                             <input type="text" class="form-control us" id="tags" name="tags" placeholder="请输入渠道号"
                                    required=""
                                    autofocus="true">
@@ -27,7 +27,7 @@
                         </div>
 
                         <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
-                        <input type="hidden" name="patch_type"  value="0"/>
+                        <input type="hidden" name="patch_type" value="0"/>
                     </form>
                 </div>
 
@@ -95,63 +95,36 @@
     <script src="http://bootboxjs.com/bootbox.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function () {
+        $("#create_patch_gray").click(function () {
+            if ($("#tags").val().length == 0) {
+                $("#err_msg").text('请填写渠道号');
+                return
+            }
+            if ($("#description").val().length == 0) {
+                $("#err_msg").text('请输入补丁描述');
+                return
+            }
+            if ($("#patch_file").val().length == 0) {
+                $("#err_msg").text('请选择补丁文件');
+                return
+            }
 
-            $(".uploadHotFixConfirm").click(function () {
-                bootbox.confirm({
-                    message: "确定这个补丁吗?",
-                    buttons: {
-                        confirm: {
-                            label: 'Yes',
-                            className: 'btn-success'
-                        },
-                        cancel: {
-                            label: 'No',
-                            className: 'btn-danger'
-                        }
-                    },
-                    callback: function (result) {
-                        if (!result) {
-                            return;
-                        }
-
-                    },
-                });
-
+            if (!$("#patch_file").val().endsWith('.apk') && !$("#patch_file").val().endsWith('.jar') && !$("#patch_file").val().endsWith('.zip') && !$("#patch_file").val().endsWith('.dex')) {
+                $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
+                $("#patch_file").val('');
+                return;
+            }
+            $("#err_msg").text('');
+            var dialog = bootbox.dialog({
+                message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
             });
-
-
-            $("#create_patch_gray").click(function () {
-                if ($("#tags").val().length == 0) {
-                    $("#err_msg").text('请填写渠道号');
-                    return
-                }
-                if ($("#description").val().length == 0) {
-                    $("#err_msg").text('请输入补丁描述');
-                    return
-                }
-                if ($("#patch_file").val().length == 0) {
-                    $("#err_msg").text('请选择补丁文件');
-                    return
-                }
-
-                if (!$("#patch_file").val().endsWith('.apk') && !$("#patch_file").val().endsWith('.jar') && !$("#patch_file").val().endsWith('.zip') && !$("#patch_file").val().endsWith('.dex')) {
-                    $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
-                    $("#patch_file").val('');
-                    return;
-                }
-                $("#err_msg").text('');
-                var dialog = bootbox.dialog({
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
-                });
-                dialog.init(function () {
-                    setTimeout(function () {
-                        window.location.href = window.location.href;
-                    }, 5000);
-                });
-                alert('空');
-                $("#create_patch_form").submit();
+            dialog.init(function () {
+                setTimeout(function () {
+                    window.location.href = window.location.href;
+                }, 5000);
             });
+            alert('空');
+            $("#create_patch_form").submit();
         });
         //路由 注册的post 方式   构建post请求
         $.extend({

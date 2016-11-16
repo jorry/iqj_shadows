@@ -107,20 +107,32 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
 
         var description = req.body.description;
         var patch_type = req.body.patch_type;
-        var appVersion = req.body.appVersion;
-        var appUid = req.body.appUid;
+        var appVersion;
+        var appUid;
 
-        console.log('appVersion'+appVersion+'appUid = ' + appUid);
+        if (patch_type == 0) {
+            var tempVersion = req.body.gray_appVersion;
+            appVersion = tempVersion.substr(0, tempVersion.length - 1);
+            var tempUid = req.body.gray_appUid;
+            appUid = tempUid.substr(0, tempUid.length);
+        } else if (patch_type = 1) {
+            var tempVersion = req.body.appVersion;
+            appVersion = tempVersion.substr(0, tempVersion.length - 1);
+            var tempUid = req.body.appUid;
+            appUid = tempUid.substr(0, tempUid.length);
+        }
+
+        console.log('appVersion' + appVersion + 'appUid = ' + appUid);
 
         var patch_status = 0;
         var tags = req.body.tags;
 
-        hotDB.save(appUid,appVersion,fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
+        hotDB.save(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
             console.log('err' + err);
             if (err) {
                 next(err);
             }
-            res.redirect('/hotfixAddDB');
+            res.redirect('/appDetail?appUid='+appUid);
         });
 
         console.log('文件类型：%s', file.mimetype);
@@ -234,13 +246,13 @@ router.get('/appDetail', function (req, res, next) {
 
     var appUid = req.query.appUid;
 
-    appVersionInfo.selectAll(appUid,function (err, rows) {
+    appVersionInfo.selectAll(appUid, function (err, rows) {
         if (err) {
             console.error(err);
             return next(err);
         }
         var versionArray = rows;
-        console.log('appId = '+appUid)
+        console.log('appId = ' + appUid)
         appInfoDB.getAppDetail(appUid, function (err, row) {
             console.log('appName = ' + row.appName);
             if (row.length == 1) {
@@ -284,12 +296,12 @@ router.get('/patchManager', function (req, res, next) {
     var appVersion = req.query.versionName;
     var appUid = req.query.appVersion;
 
-    console.log(appUid+"  index "+appVersion);
+    console.log(appUid + "  index " + appVersion);
 
     var rand1 = Math.floor(Math.random() * 10 + 1);
 
     console.log("rand1 = " + rand1);
-    hotFix.patchManager(appUid,appVersion,function (err, rows) {
+    hotFix.patchManager(appUid, appVersion, function (err, rows) {
 
         console.log('JSON', 'json = ' + rows);
 
@@ -312,7 +324,6 @@ router.get('/patchManager', function (req, res, next) {
 
         res.render('index', {
             title: 'index',
-            arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
             rows: rows,
             appUid: appUid,
             appVersion: appVersion
@@ -351,7 +362,6 @@ router.get('/index', function (req, res, next) {
 
         res.render('index', {
             title: 'index',
-            arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
             rows: rows
         });
     });
@@ -484,7 +494,7 @@ router.get('/userpositon', function (req, res, next) {
 });
 
 
-router.post('/userpositon_detail', function (req, res, next) {
+router.post('/oneUserDetail', function (req, res, next) {
     console.log('----userpositon_detail--跳转,进来了吗');
     var imei = req.body.imei;
     console.log('imei = ' + imei);
@@ -492,9 +502,8 @@ router.post('/userpositon_detail', function (req, res, next) {
         if (err) {
             next(err);
         }
-        res.render('userpositon_detail', {
+        res.render('oneUserDetail', {
             title: imei,
-            arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
             message: result
         });
     })
