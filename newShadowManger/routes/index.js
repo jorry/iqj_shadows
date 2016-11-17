@@ -77,7 +77,8 @@ router.get('/createVersion', function (req, res, next) {
             return;
         } else {
             res.render('appDetail', {
-                appUid: appVersion
+                appUid: appVersion,
+                message: versionName
             });
         }
     });
@@ -262,6 +263,7 @@ router.get('/appDetail', function (req, res, next) {
                 res.render('appDetail', {
                     title: 'appDetail',
                     app: row[0],
+                    message :row[0].appName,
                     versionArray: versionArray
                 });
             } else {
@@ -410,11 +412,12 @@ router.get('/app_list', function (req, res, next) {
         console.log('----应用列表 ' + rows);
         res.render('app_list', {
             title: 'app应用列表',
-            arr: [{sch: 'app_list', ab: 'abs', lib: '', abt: '', log: ''}],
+            arr: [{sch: 'app_list', ab: 'abs', lib: '', abt: '', log: '', log: ''}],
             rows: rows
         });
     });
 });
+
 
 router.get('/app', function (req, res, next) {
 

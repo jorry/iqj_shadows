@@ -44,9 +44,7 @@
                     <li class="{{userpostion}}"><a href="/userpositon">展示单用户行为</a></li>
                     <li class="{{abuser}}"><a href="/abuser">展示a/b 用户统计</a></li>
                     <li class="{{absetting}}"><a href="/absetting">设置A/B testting</a></li>
-                    <!--<li class="{{grayUserSetting}}"><a href="/grayUserSetting">设置灰度功能测试</a></li>-->
                     <li class="{{hotfixResult}}"><a href="/hotfixResult">展示补丁修复信息</a></li>
-                    <li class="{{hotfixEngine}}"><a href="/hotfixEngine">修复交互引擎</a></li>
                     <li class="{{abt}}"><a href="/about">关于</a></li>
 
                 </ul>
@@ -95,7 +93,7 @@
                 obj.val = opt.attr("value");
                 obj.index = opt.index();
                 obj.placeholder.text(obj.text);
-                 console.log(obj.getValue());
+                console.log(obj.getValue());
             });
         },
         getText: function () {
@@ -108,15 +106,15 @@
             return this.index;
         }
     };
-    $(document).ready(function(){
-        var mydropdown=new CustomDropDown($("#dropdown1"));
+    $(document).ready(function () {
+        var mydropdown = new CustomDropDown($("#dropdown1"));
         $(".abstting").click(function () {
             console.log(mydropdown.getValue());
         });
     });
 
 
-    function formSubmit(){
+    function formSubmit() {
         var value = document.getElementById("us").value; //灰度设置
         $.StandardPost("/graySettingPost", {
             value: value
@@ -136,7 +134,7 @@
                 var index_str = temp.indexOf(": ") + 2;
                 var appId = temp.substr(index_str, temp.length);
 
-                var url = '/patchManager' + "?versionName=" + versionName+"&appVersion="+appId;
+                var url = '/patchManager' + "?versionName=" + versionName + "&appVersion=" + appId;
 
                 //跳转结果页 GET
                 document.location.href = url;
@@ -158,7 +156,6 @@
     });
 
 
-
     $(document).ready(function () {
         $(".one_user_detail").each(function (index) {
             $(".one_user_detail").eq(index).click(function () {
@@ -169,7 +166,6 @@
             });
         });
     });
-
 
 
     $(document).ready(function () {

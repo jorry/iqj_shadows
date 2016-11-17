@@ -70,163 +70,170 @@
         </div>
     </div>
 
-    <div class="Login-box">
-        <h5 style="margin-left: 20px">爱钱进每次是灰度发布: 25%,50%,75%,100%  为了检测app是否正常工作,如果非正常工作则停止更新后重新发包, app出问题的用户则被忽略掉. 所以,我们需要通过这个平台来修复被忽略的用户app</h5>
-    </div>
 
-    <div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{message}}</h4>
+        </div>
+        <div class="Login-box">
+            <h5 style="margin-left: 20px"> 修复分两种:</h5>
+            <h5 style="margin-left: 25px"> 1: 针对版本的修复.</h5>
+            <h5 style="margin-left: 25px"> 2. 全部修复</h5>
+            <h5 style="margin-left: 40px"> (1. 出现严重问题,需要全部更新app; (请谨慎使用此功能)</h5>
+            <h5 style="margin-left: 40px"> (2. H5 运营活动 需要更改 app 和html 交互的代码</h5>
+        </div>
+        <div class="container-fluid">
 
-        <!-- Page Heading -->
-        <div class="row">
-            <div class="col-lg-12">
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
 
-                <p>
-                    <a href="./app_list">首页</a>
-                </p>
+                    <!--<p>-->
+                    <!--<a href="./app_list">首页</a>-->
+                    <!--</p>-->
 
-                <p>
-                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                            data-target="#exampleModal" data-whatever="@getbootstrap">新增版本
-                    </button>
-                </p>
-                <p>
-                    <button type="button" class="hotFixEngine btn btn-info btn-sm" data-toggle="modal" >全部修复方案
-                    </button>
-                </p>
+                    <p>
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                data-target="#exampleModal" data-whatever="@getbootstrap">新增版本
+                        </button>
+                    </p>
+                    <p>
+                        <button type="button" class="hotFixEngine btn btn-info btn-sm" data-toggle="modal">全部修复方案
+                        </button>
+                    </p>
 
+                </div>
             </div>
         </div>
-    </div>
-    <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
 
-    <div class="container-fluid">
-        <table class="table table-bordered">
-            <tr>
-                <td>应用名称:{{app.appName}}</td>
-                <td>应用描述:{{app.descriiption_app}}</td>
-            </tr>
-
-            <tr>
-                <td id="APP_ID">App ID: {{app.uid}}</td>
-                <td>创建时间: {{app.create_at}}</td>
-            </tr>
-        </table>
-
-        <table class="table table-condensed">
-            <thead>
-            <tr>
-                <th>APP版本号</th>
-                <th>版本号</th>
-                <th>创建日期</th>
-                <th>查看补丁</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each versionArray}}
+        <div class="container-fluid">
+            <table class="table table-bordered">
                 <tr>
-                    <td class="version_name_item">{{version_name}}</td>
-                    <td>{{appVersion}}</td>
-                    <td>{{created_at}}</td>
-                    <td>
-                        <button id="versionDetail" class="versionDetail btn btn-sm">查看详情</button>
-                    </td>
+                    <td>应用名称:{{app.appName}}</td>
+                    <td>应用描述:{{app.descriiption_app}}</td>
                 </tr>
-            {{/each}}
-            </tbody>
-        </table>
-    </div>
 
-    <script src="../models/AppIdUtil.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <!-- Bootstrap Core CSS -->
-    <link href="../public/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="../public/css//sb-admin.css')" rel="stylesheet">
+                <tr>
+                    <td id="APP_ID">App ID: {{app.uid}}</td>
+                    <td>创建时间: {{app.create_at}}</td>
+                </tr>
+            </table>
 
-    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="http://bootboxjs.com/bootbox.js"></script>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>APP版本号</th>
+                    <th>版本号</th>
+                    <th>创建日期</th>
+                    <th>查看补丁</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each versionArray}}
+                    <tr>
+                        <td class="version_name_item">{{version_name}}</td>
+                        <td>{{appVersion}}</td>
+                        <td>{{created_at}}</td>
+                        <td>
+                            <button id="versionDetail" class="versionDetail btn btn-sm">查看详情</button>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
 
-    <script type="text/javascript">
-        console.log('ddd');
+        <script src="../models/AppIdUtil.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <!-- Bootstrap Core CSS -->
+        <link href="../public/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link href="../public/css//sb-admin.css')" rel="stylesheet">
+
+        <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="http://bootboxjs.com/bootbox.js"></script>
+
+        <script type="text/javascript">
+            console.log('ddd');
 
 
-        $('.hotFixEngine').click(function(){
-            var temp = $("#APP_ID").text();
-            var index = temp.indexOf(": ") + 2;
-            var appId = temp.substr(index, temp.length);
-            var url = '/emergency' + "?appId="+appId;
+            $('.hotFixEngine').click(function () {
+                var temp = $("#APP_ID").text();
+                var index = temp.indexOf(": ") + 2;
+                var appId = temp.substr(index, temp.length);
+                var url = '/emergency' + "?appId=" + appId;
 
-            //跳转结果页 GET
-            document.location.href = url;
-        });
-
-        $("#create_patch_ALL").click(function () {
-            if ($("#descriptionGray").val().length == 0) {
-                $("#err_msg").text('请输入补丁描述');
-                return
-            }
-            if ($("#patch_file_gray").val().length == 0) {
-                $("#err_msg").text('请选择补丁文件');
-                return
-            }
-
-            if (!$("#patch_file_gray").val().endsWith('.apk') && !$("#patch_file_gray").val().endsWith('.jar') && !$("#patch_file_gray").val().endsWith('.zip') && !$("#patch_file_gray").val().endsWith('.dex')) {
-                $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
-                $("#patch_file_gray").val('');
-                return;
-            }
-            $("#err_msg").text('');
-            var dialog = bootbox.dialog({
-                message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
+                //跳转结果页 GET
+                document.location.href = url;
             });
-            dialog.init(function () {
-                setTimeout(function () {
-                    window.location.href = window.location.href;
-                }, 5000);
-            });
-            $("#create_patch_form_ALL").submit();
-        });
 
-
-
-
-        $(document).ready(function () {
-            $("#create_app").click(function () {
-                if ($("#app-version").val().length == 0) {
-                    $("#err_msg").text('请输入版本号');
-                    return;
+            $("#create_patch_ALL").click(function () {
+                if ($("#descriptionGray").val().length == 0) {
+                    $("#err_msg").text('请输入补丁描述');
+                    return
+                }
+                if ($("#patch_file_gray").val().length == 0) {
+                    $("#err_msg").text('请选择补丁文件');
+                    return
                 }
 
-                var reg = /^([0-9]{1}.){2,}[0-9]{1}$/;
-                if (!reg.test($("#app-version").val())) {
-                    $("#err_msg").text('版本号的格式不正确(例如1.0.0))');
+                if (!$("#patch_file_gray").val().endsWith('.apk') && !$("#patch_file_gray").val().endsWith('.jar') && !$("#patch_file_gray").val().endsWith('.zip') && !$("#patch_file_gray").val().endsWith('.dex')) {
+                    $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
+                    $("#patch_file_gray").val('');
                     return;
                 }
                 $("#err_msg").text('');
                 var dialog = bootbox.dialog({
                     message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
                 });
-                var temp = $("#APP_ID").text();
-                var index = temp.indexOf(": ") + 2;
-                var appId = temp.substr(index, temp.length);
                 dialog.init(function () {
-                    jQuery.ajax({
-                        url: "/createVersion?appUid=" + appId + "&versionName=" + $("#app-version").val(),
-                        type: 'get',
-                        success: function (res, textStatus, jqXHR) {
-                            dialog.find('.bootbox-body').html('添加成功!');
-                            setTimeout(function () {
-                                window.location.href = window.location.href;
-                            }, 500);
-                        },
-                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                            dialog.find('.bootbox-body').html("<font color='red'>系统异常!</font>");
-                        }
+                    setTimeout(function () {
+                        window.location.href = window.location.href;
+                    }, 5000);
+                });
+                $("#create_patch_form_ALL").submit();
+            });
+
+
+            $(document).ready(function () {
+                $("#create_app").click(function () {
+                    if ($("#app-version").val().length == 0) {
+                        $("#err_msg").text('请输入版本号');
+                        return;
+                    }
+
+                    var reg = /^([0-9]{1}.){2,}[0-9]{1}$/;
+                    if (!reg.test($("#app-version").val())) {
+                        $("#err_msg").text('版本号的格式不正确(例如1.0.0))');
+                        return;
+                    }
+                    $("#err_msg").text('');
+                    var dialog = bootbox.dialog({
+                        message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
+                    });
+                    var temp = $("#APP_ID").text();
+                    var index = temp.indexOf(": ") + 2;
+                    var appId = temp.substr(index, temp.length);
+                    dialog.init(function () {
+                        jQuery.ajax({
+                            url: "/createVersion?appUid=" + appId + "&versionName=" + $("#app-version").val(),
+                            type: 'get',
+                            success: function (res, textStatus, jqXHR) {
+                                dialog.find('.bootbox-body').html('添加成功!');
+                                setTimeout(function () {
+                                    window.location.href = window.location.href;
+                                }, 500);
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                dialog.find('.bootbox-body').html("<font color='red'>系统异常!</font>");
+                            }
+                        });
                     });
                 });
             });
-        });
-    </script>
+        </script>
+    </div>
 </div>
 
