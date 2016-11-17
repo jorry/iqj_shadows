@@ -20,7 +20,7 @@ hotPatch.selectPatchVersion = function (appId,callback) {
                 callback(err);
             }
 
-            var sql = "SELECT * FROM hotFix WHERE patch_status = '1'  and app_id='"+appId+"' ORDER BY id DESC;";   // patch_type = 0 表示灰度,patch_status = 1 表示已发布
+            var sql = "SELECT * FROM hotFix WHERE patch_status = '1'  and app_id='"+appId+"' ORDER BY id ASC;";   // patch_type = 0 表示灰度,patch_status = 1 表示已发布
 
             console.log('进入到hotFix 数据库-查询语句是: ' + sql);
             connection.query(sql, function (err, rows) {
