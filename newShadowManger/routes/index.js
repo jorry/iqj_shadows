@@ -115,14 +115,22 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
             appVersion = tempVersion.substr(0, tempVersion.length - 1);
             var tempUid = req.body.gray_appUid;
             appUid = tempUid.substr(0, tempUid.length);
-        } else if (patch_type = 1) {
+        } else if (patch_type == 1) {
             var tempVersion = req.body.appVersion;
             appVersion = tempVersion.substr(0, tempVersion.length - 1);
             var tempUid = req.body.appUid;
             appUid = tempUid.substr(0, tempUid.length);
+        } else if (patch_type == 4) {    //修复H5 引擎
+            console.log('-----patch_type == 1000 = ');
+            appVersion = '1000';
+            appUid = req.body.appUid;
+        } else if (patch_type == 1000) {    //全量更新
+            console.log('-----patch_type == 1000 = ')
+            appVersion = '1000';
+            appUid = req.body.appUid;
         }
 
-        console.log('appVersion' + appVersion + 'appUid = ' + appUid);
+        console.log('appVersion========' + appVersion + '//////////appUid ======== ' + appUid);
 
         var patch_status = 0;
         var tags = req.body.tags;
@@ -130,17 +138,11 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
         hotDB.save(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
             console.log('err' + err);
             if (err) {
-                next(err);
+                return next(err);
             }
-            res.redirect('/appDetail?appUid='+appUid);
+            res.redirect('/appDetail?appUid=' + appUid);
         });
 
-        console.log('文件类型：%s', file.mimetype);
-        console.log('原始文件名：%s', file.originalname);
-        console.log('新的文件名：%s', file.fieldname);
-
-        console.log('文件大小：%s', file.size);
-        console.log('文件保存路径：%s', file.path);
         console.log(req.file);
         console.log(req.body);
 
@@ -189,7 +191,8 @@ router.post('/graySettingPost', function (req, res, nnext) {
 router.get('/hotfixEngine', function (req, res, next) {
 
     res.render('hotfixEngine', {
-        title: '修复H5交互引擎'
+        title: '修复H5交互引擎',
+        appUid: req.query.appId
     });
 });
 
@@ -307,7 +310,7 @@ router.get('/patchManager', function (req, res, next) {
 
         rows.forEach(function (row) {
             if (row.patch_type == 1) {
-                row.patch_type = '全量更新';
+                row.patch_type = '版本更新';
             } else if (row.patch_type == 0) {
                 row.patch_type = '灰度更新';
             } else if (row.patch_type == 4) {
@@ -333,22 +336,16 @@ router.get('/patchManager', function (req, res, next) {
 
 });
 
-
-//补丁列表
-router.get('/index', function (req, res, next) {
-
-
-    var rand1 = Math.floor(Math.random() * 10 + 1);
-    hotFix.getHotFixRows(function (err, rows) {
+//app 全量更新通道
+router.get('/emergency',function(req,res,next){
+    hotFix.getHotFixRowsEmergency(function (err, rows) {
 
         console.log('JSON', 'json = ' + rows);
 
         rows.forEach(function (row) {
-            if (row.patch_type == 1) {
-                row.patch_type = '全量更新';
-            } else if (row.patch_type == 0) {
-                row.patch_type = '灰度更新';
-            } else if (row.patch_type == 4) {
+            if (row.patch_type == 4) {
+                row.patch_type = '修复h5引擎';
+            }else if (row.patch_type == 4) {
                 row.patch_type = '修复h5引擎';
             }
 
@@ -360,13 +357,47 @@ router.get('/index', function (req, res, next) {
 
         });
 
-        res.render('index', {
-            title: 'index',
-            rows: rows
+        res.render('emergency', {
+            title: '123',
+            rows: rows,
+            appUid: req.query.appId
         });
     });
-
 });
+
+////补丁列表
+//router.get('/index', function (req, res, next) {
+//
+//
+//    var rand1 = Math.floor(Math.random() * 10 + 1);
+//    hotFix.getHotFixRows(function (err, rows) {
+//
+//        console.log('JSON', 'json = ' + rows);
+//
+//        rows.forEach(function (row) {
+//            if (row.patch_type == 1) {
+//                row.patch_type = '版本更新';
+//            } else if (row.patch_type == 0) {
+//                row.patch_type = '灰度更新';
+//            } else if (row.patch_type == 4) {
+//                row.patch_type = '修复h5引擎';
+//            }
+//
+//            if (row.patch_status == 0) {
+//                row.patch_status = '未发布';
+//            } else if (row.patch_status == 1) {
+//                row.patch_status = '已发布';
+//            }
+//
+//        });
+//
+//        res.render('index', {
+//            title: '123',
+//            rows: rows
+//        });
+//    });
+//
+//});
 
 router.get('/app_list', function (req, res, next) {
 

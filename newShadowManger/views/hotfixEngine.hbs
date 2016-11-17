@@ -23,7 +23,8 @@
 
                         <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
                         <input type="hidden" name="patch_type" value="4"/>
-
+                        <input type="hidden" name="appUid" value={{appUid}}>
+                        <input type="hidden" name="appVersion" value='1000'/>
                     </form>
                 </div>
 
@@ -90,29 +91,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
-            $(".uploadHotFixConfirm").click(function () {
-                bootbox.confirm({
-                    message: "确定这个补丁吗?",
-                    buttons: {
-                        confirm: {
-                            label: 'Yes',
-                            className: 'btn-success'
-                        },
-                        cancel: {
-                            label: 'No',
-                            className: 'btn-danger'
-                        }
-                    },
-                    callback: function (result) {
-                        if (!result) {
-                            return;
-                        }
-
-                    },
-                });
-
-            });
 
 
             $("#create_patch").click(function () {

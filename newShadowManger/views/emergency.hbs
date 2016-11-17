@@ -1,20 +1,14 @@
 <!-- body -->
 <div class='container'>
 
-    <div class="modal fade" id="grayExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="allExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
                 <div class="modal-body">
-                    <form id="create_patch_form_gray" action="/singleUpload" method="post"
+                    <form id="create_patch_form_all" action="/singleUpload" method="post"
                           enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="description" class="form-control-label">渠道号:</label>
-                            <input type="text" class="form-control us" id="tags" name="tags" placeholder="请输入渠道号"
-                                   required=""
-                                   autofocus="true">
-                        </div>
                         <div class="form-group">
                             <label for="description" class="form-control-label">补丁描述:</label>
                             <input type="text" class="form-control" id="descriptionGray" name="description"
@@ -28,7 +22,7 @@
                         </div>
 
                         <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
-                        <input type="hidden" name="patch_type" value="0"/>
+                        <input type="hidden" name="patch_type" value="6"/>
                         <input type="hidden" name="gray_appUid" value={{appUid}}>
                         <input type="hidden" name="gray_appVersion" value={{appVersion}}/>
                     </form>
@@ -36,7 +30,7 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="create_patch_gray">创建</button>
+                    <button type="button" class="btn btn-primary" id="create_patch_all">创建</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -44,13 +38,13 @@
     </div>
 
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="h5ExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
                 <div class="modal-body">
-                    <form id="create_patch_form" action="/singleUpload" method="post"
+                    <form id="create_patch_form_h5" action="/singleUpload" method="post"
                           enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="description" class="form-control-label">补丁描述:</label>
@@ -65,7 +59,7 @@
                         </div>
 
                         <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
-                        <input type="hidden" name="patch_type" value="1"/>
+                        <input type="hidden" name="patch_type" value="5"/>
                         <input type="hidden" name="appUid" value={{appUid}}>
                         <input type="hidden" name="appVersion" value={{appVersion}}/>
 
@@ -75,7 +69,7 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="create_patch">创建</button>
+                    <button type="button" class="btn btn-primary" id="create_patchH5">创建</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -85,15 +79,11 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4 class="panel-title">app版本:<{{appVersion}}></h4>
+            <h4 class="panel-title">更新全部</h4>
         </div>
         <div class="Login-box">
-            <h5 style="margin-left: 20px">1. 此界面用于上传补丁包,但是没有真正的发布出去</h5>
-            <h5 style="margin-left: 20px">2. 需要在补丁详情界面 手动点击上传</h5>
-
-            <h5 style="margin-left: 20px">3. bug修复是一个非常严肃的问题,.目前支持全量修复或者根据app 版本进行修复, 补丁是基于一个基础的安装包进行的</h5>
-            <h5 style="margin-left: 20px">4. 补丁的文件名是唯一的,不可以重名,如果重名将添加失败的</h5>
-
+            <h5 style="margin-left: 20px">1. 如果运营推广有新增加的活动,在本页面上传,然后和H5交互过程有无法识别的JS调用,则调去接口获取补丁,提示用户进行轻量更新(也就是说重启)</h5>
+            <h5 style="margin-left: 20px">2. 如果需要全部app的更新(一段时间内只运行1个全部更新补丁版本)</h5>
         </div>
 
         <div class="container-fluid">
@@ -103,12 +93,12 @@
                 <div class="col-lg-12">
                     <p>
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                data-target="#exampleModal" data-whatever="@getbootstrap">上传补丁
+                                data-target="#h5ExampleModal" data-whatever="@getbootstrap">H5 运营活动
                         </button>
                     </p>
                     <p>
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                data-target="#grayExampleModal" data-whatever="@getbootstrap">灰度测试
+                                data-target="#allExampleModal" data-whatever="@getbootstrap">app 全部更新
                         </button>
                     </p>
 
@@ -162,11 +152,8 @@
         <script type="text/javascript">
             $(document).ready(function () {
 
-                $("#create_patch_gray").click(function () {
-                    if ($("#tags").val().length == 0) {
-                        $("#err_msg").text('请填写渠道号');
-                        return
-                    }
+                $("#create_patch_all").click(function () {
+
                     if ($("#descriptionGray").val().length == 0) {
                         $("#err_msg").text('请输入补丁描述');
                         return
@@ -190,11 +177,11 @@
                             window.location.href = window.location.href;
                         }, 5000);
                     });
-                    $("#create_patch_form_gray").submit();
+                    $("#create_patch_form_all").submit();
                 });
 
 
-                $("#create_patch").click(function () {
+                $("#create_patchH5").click(function () {
 
                     if ($("#description").val().length == 0) {
                         $("#err_msg").text('请输入补丁描述');
@@ -220,7 +207,7 @@
                             window.location.href = window.location.href;
                         }, 5000);
                     });
-                    $("#create_patch_form").submit();
+                    $("#create_patch_form_h5").submit();
                 });
             });
 

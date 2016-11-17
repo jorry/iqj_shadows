@@ -51,6 +51,46 @@ HotFix.patchManager = function (app_uid,appVersion,callback) {
 };
 
 
+HotFix.getHotFixRowsEmergency = function (callback) {
+    db.getConnection(function (err, connection) {
+
+        if (err) {
+            return callback(err);
+        }
+
+        var sql;
+        connection.beginTransaction(function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            sql = "SELECT * FROM hotFix WHERE patch_type <> 1 and patch_type <> 0";
+
+            connection.query(sql, [], function (err, rows) {
+                if (err) {
+                    return connection.rollback(function () {
+                        callback(err);
+                    });
+                }
+
+                connection.commit(function (err) {
+
+                    if (err) {
+                        return connection.rollback(function () {
+                            callback(err);
+                        });
+                    }
+
+                    connection.end();
+                    callback(undefined,rows);
+
+                });
+            });
+        });
+    });
+};
+
+
 //应用名称,应用版本
 HotFix.getHotFixRows = function (callback) {
     db.getConnection(function (err, connection) {

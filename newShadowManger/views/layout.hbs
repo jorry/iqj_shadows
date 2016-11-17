@@ -67,12 +67,54 @@
 <!-- 内容部分 -->
 {{{body}}}
 
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <!-- <script src="http://v3.bootcss.com/assets/js/docs.min.js"></script> -->
 <script type="text/javascript">
+
+    function CustomDropDown(element) {
+        this.dropdown = element;
+        this.placeholder = this.dropdown.find(".placeholder");
+        this.options = this.dropdown.find("ul.dropdown-menu > li");
+        this.val = '0';
+        this.index = -1;//默认为-1;
+        this.initEvents();//初始化事件
+    }
+    //原型方法
+    CustomDropDown.prototype = {
+
+        initEvents: function () {
+            var obj = this;
+            //点击下拉列表的选项
+            obj.options.on("click", function () {
+                var opt = $(this);
+                obj.text = opt.find("a").text();
+                obj.val = opt.attr("value");
+                obj.index = opt.index();
+                obj.placeholder.text(obj.text);
+                 console.log(obj.getValue());
+            });
+        },
+        getText: function () {
+            return this.text;
+        },
+        getValue: function () {
+            return this.val;
+        },
+        getIndex: function () {
+            return this.index;
+        }
+    };
+    $(document).ready(function(){
+        var mydropdown=new CustomDropDown($("#dropdown1"));
+        $(".abstting").click(function () {
+            console.log(mydropdown.getValue());
+        });
+    });
+
 
     function formSubmit(){
         var value = document.getElementById("us").value; //灰度设置
@@ -159,13 +201,6 @@
             document.location.href = '/app_list';
         });
     });
-
-    //hotFix 点击确认按钮的调用   get方式, express 路由 在注册的时候要区分get还是post
-//    $(document).ready(function () {
-//        $('.uploadHotFixConfirm').click(function () {
-//            document.location.href = '/hotfixUploadFinish';
-//        });
-//    });
 
     //路由 注册的post 方式   构建post请求
     $.extend({

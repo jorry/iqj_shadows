@@ -13,6 +13,10 @@ AppIdUtil.appUid = function () {
     return date + "-" + (100001 + x);
 }
 
+AppIdUtil.getAppIdFromH5 = function(appId){
+    var index = appId.indexOf(": ") + 2;
+    var appId = appId.substr(index, temp.length);
+}
 
 //日期格式化函数
 Date.prototype.Format = function (fmt) {

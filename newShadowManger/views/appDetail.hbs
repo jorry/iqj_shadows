@@ -1,4 +1,42 @@
 <div class='container'>
+
+    <div class="modal fade" id="exampleModalAll" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <form id="create_patch_form_ALL" action="/singleUpload" method="post"
+                          enctype="multipart/form-data">
+
+                        <div class="form-group">
+                            <label for="description" class="form-control-label">补丁描述:</label>
+                            <input type="text" class="form-control" id="descriptionGray" name="description"
+                                   maxlength="32"
+                                   placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patch_file_gray" class="form-control-label">补丁文件:</label>
+                            <input type="file" class="form-control" id="patch_file_gray" name="file">
+                        </div>
+
+                        <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
+                        <input type="hidden" name="patch_type" value="1000"/>
+                        <input type="hidden" name="appUid" value={{app.uid}}>
+                    </form>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="create_patch_ALL">创建</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="bd-example">
 
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -32,11 +70,16 @@
         </div>
     </div>
 
+    <div class="Login-box">
+        <h5 style="margin-left: 20px">爱钱进每次是灰度发布: 25%,50%,75%,100%  为了检测app是否正常工作,如果非正常工作则停止更新后重新发包, app出问题的用户则被忽略掉. 所以,我们需要通过这个平台来修复被忽略的用户app</h5>
+    </div>
+
     <div class="container-fluid">
 
         <!-- Page Heading -->
         <div class="row">
             <div class="col-lg-12">
+
                 <p>
                     <a href="./app_list">首页</a>
                 </p>
@@ -44,6 +87,10 @@
                 <p>
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
                             data-target="#exampleModal" data-whatever="@getbootstrap">新增版本
+                    </button>
+                </p>
+                <p>
+                    <button type="button" class="hotFixEngine btn btn-info btn-sm" data-toggle="modal" >全部修复方案
                     </button>
                 </p>
 
@@ -68,6 +115,7 @@
         <table class="table table-condensed">
             <thead>
             <tr>
+                <th>APP版本号</th>
                 <th>版本号</th>
                 <th>创建日期</th>
                 <th>查看补丁</th>
@@ -77,6 +125,7 @@
             {{#each versionArray}}
                 <tr>
                     <td class="version_name_item">{{version_name}}</td>
+                    <td>{{appVersion}}</td>
                     <td>{{created_at}}</td>
                     <td>
                         <button id="versionDetail" class="versionDetail btn btn-sm">查看详情</button>
@@ -87,7 +136,7 @@
         </table>
     </div>
 
-
+    <script src="../models/AppIdUtil.js"></script>
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <!-- Bootstrap Core CSS -->
     <link href="../public/css/bootstrap.min.css" rel="stylesheet">
@@ -100,6 +149,48 @@
 
     <script type="text/javascript">
         console.log('ddd');
+
+
+        $('.hotFixEngine').click(function(){
+            var temp = $("#APP_ID").text();
+            var index = temp.indexOf(": ") + 2;
+            var appId = temp.substr(index, temp.length);
+            var url = '/emergency' + "?appId="+appId;
+
+            //跳转结果页 GET
+            document.location.href = url;
+        });
+
+        $("#create_patch_ALL").click(function () {
+            if ($("#descriptionGray").val().length == 0) {
+                $("#err_msg").text('请输入补丁描述');
+                return
+            }
+            if ($("#patch_file_gray").val().length == 0) {
+                $("#err_msg").text('请选择补丁文件');
+                return
+            }
+
+            if (!$("#patch_file_gray").val().endsWith('.apk') && !$("#patch_file_gray").val().endsWith('.jar') && !$("#patch_file_gray").val().endsWith('.zip') && !$("#patch_file_gray").val().endsWith('.dex')) {
+                $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
+                $("#patch_file_gray").val('');
+                return;
+            }
+            $("#err_msg").text('');
+            var dialog = bootbox.dialog({
+                message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
+            });
+            dialog.init(function () {
+                setTimeout(function () {
+                    window.location.href = window.location.href;
+                }, 5000);
+            });
+            $("#create_patch_form_ALL").submit();
+        });
+
+
+
+
         $(document).ready(function () {
             $("#create_app").click(function () {
                 if ($("#app-version").val().length == 0) {
