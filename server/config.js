@@ -3,9 +3,9 @@
  */
 
 var config = {
-    username:'root',
-    password:'qsd19001008',
-    db_host:'localhost',
+    username:'shadowsapp',
+    password:'liujiawei',
+    db_host:'118.178.87.5',
     db_port:3306,
     db_name:'shadowsApp'
 }
