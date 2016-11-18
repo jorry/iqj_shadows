@@ -133,66 +133,66 @@ HotFix.getHotFixRows = function (callback) {
 
 
 
-
-//设置灰度功能,同一时间,只能有一个灰度
-HotFix.graySetting = function (hashCode, appVersion, hotfixType, us, callback) {
-    db.getConnection(function (err, connection) {
-
-        if (err) {
-            return callback(err);
-        }
-
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "SELECT * FROM graySetting";
-            connection.query(sql,[],function(err,rows){
-
-                if (err) {
-                    return callback(err);
-                }
-
-                if (rows.length >= 1){
-                    return callback('同一时间只能有一个灰度功能测试,请在灰度代码回滚界面查看相关信息');
-                }
-
-                var date = new Date().Format("yyyy-MM-dd");
-                var revert = 1;
-                var hotUrl = "http://172.20.30.66:8080/patch_signed_7zip.apk";
-
-                console.log('graySetting ');
-                //sql = "INSERT INTO graySetting (appVersion,hashCode,hotfixType,hotUrl,revert,us) VALUES ('" + appVersion + "','" + hashCode + "','" + hotfixType + "','"+ hotUrl+ "','" + revert + "','" + us + "');";
-
-                connection.query("INSERT INTO graySetting SET appVersion=?,hashCode=?,hotfixType=?,hotUrl=?,revert=?,us=?", [appVersion, hashCode, hotfixType, hotUrl, revert, us], function (err, rows) {
-                    console.log('graySetting = ' + err);
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    console.log('graySetting = ');
-                    connection.commit(function (err) {
-
-                        if (err) {
-                            return connection.rollback(function () {
-                                callback(err);
-                            });
-                        }
-
-                        connection.end();
-                        callback();
-
-                    });
-                });
-            });
-
-
-        });
-    });
-}
+//
+////设置灰度功能,同一时间,只能有一个灰度
+//HotFix.graySetting = function (hashCode, appVersion, hotfixType, us, callback) {
+//    db.getConnection(function (err, connection) {
+//
+//        if (err) {
+//            return callback(err);
+//        }
+//
+//        var sql;
+//        connection.beginTransaction(function (err) {
+//            if (err) {
+//                return callback(err);
+//            }
+//
+//            sql = "SELECT * FROM graySetting";
+//            connection.query(sql,[],function(err,rows){
+//
+//                if (err) {
+//                    return callback(err);
+//                }
+//
+//                if (rows.length >= 1){
+//                    return callback('同一时间只能有一个灰度功能测试,请在灰度代码回滚界面查看相关信息');
+//                }
+//
+//                var date = new Date().Format("yyyy-MM-dd");
+//                var revert = 1;
+//                var hotUrl = "http://172.20.30.66:8080/patch_signed_7zip.apk";
+//
+//                console.log('graySetting ');
+//                //sql = "INSERT INTO graySetting (appVersion,hashCode,hotfixType,hotUrl,revert,us) VALUES ('" + appVersion + "','" + hashCode + "','" + hotfixType + "','"+ hotUrl+ "','" + revert + "','" + us + "');";
+//
+//                connection.query("INSERT INTO graySetting SET appVersion=?,hashCode=?,hotfixType=?,hotUrl=?,revert=?,us=?", [appVersion, hashCode, hotfixType, hotUrl, revert, us], function (err, rows) {
+//                    console.log('graySetting = ' + err);
+//                    if (err) {
+//                        return connection.rollback(function () {
+//                            callback(err);
+//                        });
+//                    }
+//                    console.log('graySetting = ');
+//                    connection.commit(function (err) {
+//
+//                        if (err) {
+//                            return connection.rollback(function () {
+//                                callback(err);
+//                            });
+//                        }
+//
+//                        connection.end();
+//                        callback();
+//
+//                    });
+//                });
+//            });
+//
+//
+//        });
+//    });
+//}
 
 //代码回滚的功能
 //HotFix.revert_return = function (imei, callback) {
@@ -330,7 +330,7 @@ HotFix.getOneUserStep = function (imei, callback) {
                 callback(err);
             }
 
-            var sql = "SELECT * FROM addOneUserStep WHERE imei = '" + imei + "';";
+            var sql = "SELECT * FROM addOneUserStep WHERE id = '" + imei + "';";
 
             console.log('进入到   addOneUserStep 数据库-查询语句是: ' + sql);
             connection.query(sql, function (err, rows) {

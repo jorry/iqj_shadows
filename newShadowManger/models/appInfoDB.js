@@ -100,6 +100,7 @@ appInfoDB.insertAppInfo = function(appName,platform,u_id,destination,callback){
                 return callback(err);
             }
 
+            sql  = "SELECT * FROM appInfo WHERE appName = '"+appName+"';";
             var date = new Date().Format("yyyy-MM-dd");
 
             sql = "INSERT INTO appInfo SET appName=?,platfrom=?,uid=?,descriiption_app=?,create_at=?";

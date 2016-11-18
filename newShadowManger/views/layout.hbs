@@ -106,12 +106,6 @@
             return this.index;
         }
     };
-    $(document).ready(function () {
-        var mydropdown = new CustomDropDown($("#dropdown1"));
-        $(".abstting").click(function () {
-            console.log(mydropdown.getValue());
-        });
-    });
 
 
     function formSubmit() {
@@ -159,9 +153,9 @@
     $(document).ready(function () {
         $(".one_user_detail").each(function (index) {
             $(".one_user_detail").eq(index).click(function () {
-                var imei = $(".imei").eq(index).text();
+                var id = $(".id").eq(index).text();
                 $.StandardPost("/oneUserDetail", {
-                    imei: imei
+                    id: id
                 });
             });
         });
@@ -172,9 +166,10 @@
         $(".patch_detail").each(function (index) {
             $(".patch_detail").eq(index).click(function () {
                 var hash = $(".hashCode").eq(index).text();
-                $.StandardPost("/patch", {
-                    hashCode: hash
-                });
+                document.location.href = '/patch?hashCode='+hash;
+//                $.StandardPost("/patch", {
+//                    hashCode: hash
+//                });
             });
         });
     });

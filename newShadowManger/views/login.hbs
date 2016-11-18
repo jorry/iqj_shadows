@@ -4,25 +4,28 @@
         <div class="panel-heading">
             <h4 class="panel-title">{{title}}</h4>
         </div>
-        <div class="panel-body">
-            <div class="row Login-box">
-                <div class="col-lg-4 col-lg-offset-4">
-
-                    <input type="text" class="form-control" name="username" placeholder="一个独特的账号" required=""
-                           autofocus="true">
-                    <input style="margin-top:10px;" type="password" class="form-control" name="password"
-                           placeholder="の" required="">
+        <<div class="panel-body">
+        <div class="row Login-box">
+            <div class="col-lg-4 col-lg-offset-4">
+                <form action="/login" method="POST" class="form-signin" role="form">
+                    <input type="text" class="form-control" name="username" placeholder="一个独特的账号" required="" autofocus="true">
+                    <input style="margin-top:10px;" type="password" class="form-control" name="password" placeholder="密码" required="">
                     <input id="referer" type="hidden" name="referer">
-
+                    <script type="text/javascript">
+                        console.log(document.referrer);
+                        var referer=document.getElementById('referer');
+                        referer.setAttribute('value',document.referrer);
+                    </script>
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" value="remember-me">记住密码
                         </label>
                     </div>
-                    <button class="login btn btn-lg btn-primary btn-block" type="submit">登录</button>
-                </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+                </form>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- footer -->

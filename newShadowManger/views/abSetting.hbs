@@ -8,7 +8,7 @@
         <div class="panel-body" style="margin-left: 150px">
             <div class="row">
                 <div class="col-lg-3">
-                    <button id="submit" class="btn btn-default" type="button">版本</button>
+                    <button id="submit" class="btn btn-default" type="button">A</button>
                 </div>
                 <div class="col-lg-1">
 
@@ -19,41 +19,63 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li value="0"><a>V 4.5 版本</a></li>
-                            <li value="1"><a>V 4.6 版本</a></li>
-                            <li value="2"><a>V 4.7 版本</a></li>
-                            <li value="3"><a>V 4.8 版本</a></li>
-                            <li value="4"><a>V 4.9 版本</a></li>
+                        {{#each abrows}}
+                            <li value={{id}}><a>{{version_name}}</a></li>
+                        {{/each}}
                         </ul>
                     </div>
                 </div>
             </div><!-- /.row -->
             <div class="row" style="margin-top: 20px">
                 <div class="col-lg-3">
-                    <button id="submit" class="btn btn-default" type="button">用户比例</button>
+                    <button id="submit" class="btn btn-default" type="button">B</button>
                 </div>
                 <div class="col-lg-1">
 
-                    <div id="dropdown1" class="dropdown">
+                    <div id="dropdown2" class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                                 data-toggle="dropdown">
-                            <span class="placeholder">30%</span>
+                            <span class="placeholder">最新版本</span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li value="0"><a>10%</a></li>
-                            <li value="1"><a>20%</a></li>
-                            <li value="2"><a>30%</a></li>
-                            <li value="3"><a>40%</a></li>
+                            {{#each abrows}}
+                                <li value={{id}}><a>{{version_name}}</a></li>
+                            {{/each}}
                         </ul>
                     </div>
                 </div>
             </div><!-- /.row -->
             <div class="col-lg-4 col-lg-offset-4" style="margin-top: 60px">
-                <button  class="abstting btn btn-lg btn-primary btn-block">发布</button>
+                <button class="abstting btn btn-lg btn-primary btn-block">发布</button>
             </div>
         </div>
 
+
+        <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <!-- Bootstrap Core CSS -->
+        <link href="../public/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link href="../public/css//sb-admin.css')" rel="stylesheet">
+
+        <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="http://bootboxjs.com/bootbox.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var Adropdown = new CustomDropDown($("#dropdown1"));
+                var Bdropdown = new CustomDropDown($("#dropdown2"));
+                $(".abstting").click(function () {
+                    if (Adropdown.getValue() == Bdropdown.getValue()){
+                        alert(Adropdown.getValue()+" "+Bdropdown.getValue());
+                    }else{
+
+                    }
+
+                });
+            });
+        </script>
 
     </div>
     <!-- footer -->

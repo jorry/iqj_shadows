@@ -12,6 +12,7 @@
                         <table class="table table-condensed">
                             <thead>
                             <tr>
+                                <th>序列号</th>
                                 <th>设备ID</th>
                                 <th>app版本</th>
                                 <th>手机系统版本</th>
@@ -22,7 +23,8 @@
                             <tbody>
                             {{#each oneUser}}
                                 <tr>
-                                    <td class="imei">{{imei}}</td>
+                                    <td class="id">{{id}}</td>
+                                    <td >{{imei}}</td>
                                     <td>{{appVersion}}</td>
                                     <td>{{osVersion}}</td>
                                     <td>{{net}}</td>

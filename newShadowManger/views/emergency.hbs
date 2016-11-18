@@ -76,6 +76,7 @@
         </div>
     </div>
 
+    <input  type="hidden"   id="abtesttingAppUid" value={{appUid}}>
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -101,7 +102,11 @@
                                 data-target="#allExampleModal" data-whatever="@getbootstrap">app 全部更新
                         </button>
                     </p>
-
+                    <p>
+                        <button id="abtestting" type="button" class="abtestting btn btn-info btn-sm"
+                                data-toggle="modal">A / B testting
+                        </button>
+                    </p>
                 </div>
             </div>
         </div>
@@ -151,6 +156,16 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
+
+                $("#abtestting").click(function(){
+
+                    var appUid = document.getElementById("abtesttingAppUid").value;
+
+                    var url = '/absetting?appId=' + appUid;
+
+//                    //跳转结果页 GET
+                    document.location.href = url;
+                });
 
                 $("#create_patch_all").click(function () {
 

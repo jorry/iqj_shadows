@@ -8,6 +8,12 @@ var exphbs = require('express-handlebars');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var flash = require('connect-flash');
+
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
 
 var app = express();
 
@@ -19,8 +25,8 @@ app.engine('handlebars', exphbs({
         'views/partials/'
     ]
 }));
-app.set('view engine', 'hbs');
 
+app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -30,8 +36,25 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//配置session,passpord必要的中间件
+app.use(session({
+    secret: 'secret',//加密字符串
+    resave: true,
+    saveUninitialized: true
+}));
+
+// Passport init 身份验证模块passport初始化
+app.use(passport.initialize());
+app.use(passport.session());
+
+//网站信息寄存器
+app.use(flash());
+
+
 app.use('/', routes);
 app.use('/users', users);
+
+
 
 
 // catch 404 and forward to error handler
