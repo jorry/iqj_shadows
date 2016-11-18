@@ -23,7 +23,7 @@ HotFix.patchManager = function (app_uid,appVersion,callback) {
                 return callback(err);
             }
 
-            sql = "SELECT * FROM hotFix WHERE app_id = '"+app_uid+"' and appVersion = '"+appVersion+"';";
+            sql = "SELECT * FROM appHotFix WHERE app_id = '"+app_uid+"' and appVersion = '"+appVersion+"';";
             console.log('patchManager = '+sql);
 
             connection.query(sql, [], function (err, rows) {
@@ -64,7 +64,7 @@ HotFix.getHotFixRowsEmergency = function (callback) {
                 return callback(err);
             }
 
-            sql = "SELECT * FROM hotFix WHERE patch_type <> 1 and patch_type <> 0";
+            sql = "SELECT * FROM appHotFix WHERE patch_type <> 1 and patch_type <> 0";
 
             connection.query(sql, [], function (err, rows) {
                 if (err) {
@@ -105,7 +105,7 @@ HotFix.getHotFixRows = function (callback) {
                 return callback(err);
             }
 
-            sql = "SELECT * FROM hotFix;";
+            sql = "SELECT * FROM appHotFix;";
 
             connection.query(sql, [], function (err, rows) {
                 if (err) {
@@ -359,7 +359,7 @@ HotFix.getHotFixResult = function (callback) {
                 return;
             }
 
-            var sql = "SELECT distinct hashCode FROM hotfix ;";
+            var sql = "SELECT distinct hashCode FROM appHotFix ;";
             console.log('进入到   hotfix 数据库-查询语句是: ' + sql)
             connection.query(sql, function (err, rows) {
                 console.log('进入到   hotfix  数据库-查询结果: err ' + err + "   rows = " + rows);

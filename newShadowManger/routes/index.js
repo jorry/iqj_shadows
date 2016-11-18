@@ -159,6 +159,7 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
 
         var a,b;
 
+        var abTestting = false;
         if (patch_type == 0) {
             var tempVersion = req.body.gray_appVersion;
             appVersion = tempVersion.substr(0, tempVersion.length - 1);
@@ -181,26 +182,41 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
             console.log('-----patch_type == 1000 = ')
             appVersion = '1001';
             appUid = req.body.appUid;
-            a = req.body.a;
-            b = req.body.b;
+            a = req.body.aTest;
+            b = req.body.bTest;
+            abTestting =true;
+            console.log(a+"  patch_type == 7  "+b)
         } else if (patch_type == 1000) {    //全量更新
             console.log('-----patch_type == 1000 = ')
             appVersion = '1000';
             appUid = req.body.appUid;
         }
 
-        console.log('appVersion========' + appVersion + '//////////appUid ======== ' + appUid);
-
         var patch_status = 0;
         var tags = req.body.tags;
 
-        hotDB.save(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
-            console.log('err' + err);
-            if (err) {
-                return next(err);
-            }
-            res.redirect('/appDetail?appUid=' + appUid);
-        });
+        console.log('appVersion========' + appVersion + '//////////appUid ======== ' + appUid);
+        if (abTestting){
+            var abtestting = a+'/'+b;
+            hotDB.saveABsetting(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, abtestting,function (err) {
+                console.log('err' + err);
+                if (err) {
+                    return next(err);
+                }
+                res.redirect('/appDetail?appUid=' + appUid);
+            });
+        }else{
+            hotDB.save(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
+                console.log('err' + err);
+                if (err) {
+                    return next(err);
+                }
+                res.redirect('/appDetail?appUid=' + appUid);
+            });
+        }
+
+
+
 
         console.log(req.file);
         console.log(req.body);
@@ -377,6 +393,7 @@ router.get('/absetting',ensureAuthenticated, function (req, res, next) {
 
         res.render('abSetting', {
             title: '设置a/b用户',
+            appUid:appId,
             abrows:rows
         });
     });
@@ -510,10 +527,12 @@ router.get('/emergency',ensureAuthenticated, function (req, res, next) {
         console.log('JSON', 'json = ' + rows);
 
         rows.forEach(function (row) {
-            if (row.patch_type == 4) {
+            if (row.patch_type == 6) {
                 row.patch_type = '修复h5引擎';
-            } else if (row.patch_type == 4) {
-                row.patch_type = '修复h5引擎';
+            } else if (row.patch_type == 5) {
+                row.patch_type = '运营活动';
+            } else if (row.patch_type == 7) {
+                row.patch_type = 'A/B testting';
             }
 
             if (row.patch_status == 0) {
@@ -596,7 +615,8 @@ router.get('/app', function (req, res, next) {
 // 补丁详情,用于补丁的发布操作
 router.get('/patch', function (req, res, next) {
     var hashCode = req.query.hashCode;
-    console.log('hashCode = ' + hashCode);
+    var appId = req.query.appId;
+    console.log(appId+'hashCode = ' + hashCode);
     hotDB.getHotFixRow(hashCode, function (err, row) {
         if (err) {
             return next(err);

@@ -1,53 +1,107 @@
 <!-- 搜索结果页 -->
 <div class="container">
+
+    <div class="modal fade" id="allExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <form id="create_patch_form_all" action="/singleUpload" method="post"
+                          enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="description" class="form-control-label">补丁描述:</label>
+                            <input type="text" class="form-control" id="descriptionGray" name="description"
+                                   maxlength="32"
+                                   placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="form-control-label">A/B方案的 app版本:</label>
+                            <input type="text" class="form-control" id="aTest" name="aTest"
+                                   maxlength="32"
+                                   placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patch_file_gray" class="form-control-label">补丁文件:</label>
+                            <input type="file" class="form-control" id="patch_file_gray" name="file">
+                        </div>
+
+                        <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
+                        <input type="hidden" name="patch_type" value="7"/>
+                        <input type="hidden" name="appUid" value={{appUid}}>
+                        <input type="hidden" name="appVersion" value={{appVersion}}/>
+
+
+                    </form>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="create_patch_all">创建</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- 搜索结果页 -->
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">{{title}}</h4>
         </div>
+        <div class="Login-box">
+            <h5 style="margin-left: 20px">A/B testting 使用规则:  上传的补丁包必须包含两种方案; 某个app版本的app下载到了测试包以后,随机展示两种不同的文字颜色,或者按钮的位置</h5>
+        </div>
         <div class="panel-body" style="margin-left: 150px">
-            <div class="row">
-                <div class="col-lg-3">
-                    <button id="submit" class="btn btn-default" type="button">A</button>
-                </div>
-                <div class="col-lg-1">
 
-                    <div id="dropdown1" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                data-toggle="dropdown">
-                            <span class="placeholder">最新版本</span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                        {{#each abrows}}
-                            <li value={{id}}><a>{{version_name}}</a></li>
-                        {{/each}}
-                        </ul>
-                    </div>
-                </div>
-            </div><!-- /.row -->
-            <div class="row" style="margin-top: 20px">
-                <div class="col-lg-3">
-                    <button id="submit" class="btn btn-default" type="button">B</button>
-                </div>
-                <div class="col-lg-1">
 
-                    <div id="dropdown2" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                data-toggle="dropdown">
-                            <span class="placeholder">最新版本</span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            {{#each abrows}}
-                                <li value={{id}}><a>{{version_name}}</a></li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-            </div><!-- /.row -->
+            <!--<div class="row">-->
+                <!--<div class="col-lg-3">-->
+                    <!--<button id="submit" class="btn btn-default" type="button">A</button>-->
+                <!--</div>-->
+                <!--<div class="col-lg-1">-->
+
+                    <!--<div id="dropdown1" class="dropdown">-->
+                        <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"-->
+                                <!--data-toggle="dropdown">-->
+                            <!--<span class="placeholder">最新版本</span>-->
+                            <!--<span class="caret"></span>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu" role="menu">-->
+                            <!--{{#each abrows}}-->
+                                <!--<li value={{id}}><a>{{version_name}}</a></li>-->
+                            <!--{{/each}}-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>&lt;!&ndash; /.row &ndash;&gt;-->
+            <!--<div class="row" style="margin-top: 20px">-->
+                <!--<div class="col-lg-3">-->
+                    <!--<button id="submit" class="btn btn-default" type="button">B</button>-->
+                <!--</div>-->
+                <!--<div class="col-lg-1">-->
+
+                    <!--<div id="dropdown2" class="dropdown">-->
+                        <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"-->
+                                <!--data-toggle="dropdown">-->
+                            <!--<span class="placeholder">最新版本</span>-->
+                            <!--<span class="caret"></span>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu" role="menu">-->
+                            <!--{{#each abrows}}-->
+                                <!--<li value={{id}}><a>{{version_name}}</a></li>-->
+                            <!--{{/each}}-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>&lt;!&ndash; /.row &ndash;&gt;-->
             <div class="col-lg-4 col-lg-offset-4" style="margin-top: 60px">
-                <button class="abstting btn btn-lg btn-primary btn-block">发布</button>
+                <button class=" btn btn-lg btn-primary btn-block" type="button" data-toggle="modal" id="abtestingShow"
+                        data-target="#allExampleModal" data-whatever="@getbootstrap">发布
+                </button>
             </div>
         </div>
 
@@ -62,18 +116,57 @@
         <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
         <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script src="http://bootboxjs.com/bootbox.js"></script>
+
         <script type="text/javascript">
             $(document).ready(function () {
+
                 var Adropdown = new CustomDropDown($("#dropdown1"));
                 var Bdropdown = new CustomDropDown($("#dropdown2"));
-                $(".abstting").click(function () {
-                    if (Adropdown.getValue() == Bdropdown.getValue()){
-                        alert(Adropdown.getValue()+" "+Bdropdown.getValue());
-                    }else{
 
+
+                $("#create_patch_all").click(function () {
+
+                    if ($("#descriptionGray").val().length == 0) {
+                        $("#err_msg").text('请输入补丁描述');
+                        return
                     }
 
+                    if ($("#aTest").val().length == 0) {
+                        $("#err_msg").text('请选择A方案的版本');
+                        return
+                    }
+
+                    var reg = /^([0-9]{1}.){2,}[0-9]{1}$/;
+                    if (!reg.test($("#aTest").val())) {
+                        $("#err_msg").text('版本号的格式不正确(例如1.0.0))');
+                        return;
+                    }
+                    if ($("#patch_file_gray").val().length == 0) {
+                        $("#err_msg").text('请选择补丁文件');
+                        return
+                    }
+
+
+
+                    if (!$("#patch_file_gray").val().endsWith('.apk') && !$("#patch_file_gray").val().endsWith('.jar') && !$("#patch_file_gray").val().endsWith('.zip') && !$("#patch_file_gray").val().endsWith('.dex')) {
+                        $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
+                        $("#patch_file_gray").val('');
+                        return;
+                    }
+                    $("#err_msg").text('');
+                    var dialog = bootbox.dialog({
+                        message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
+                    });
+                    dialog.init(function () {
+                        setTimeout(function () {
+                            window.location.href = window.location.href;
+                        }, 5000);
+                    });
+
+                    $("#create_patch_form_all").submit();
                 });
+
+
             });
         </script>
 

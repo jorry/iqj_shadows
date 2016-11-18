@@ -24,7 +24,7 @@ HotFix.save = function (appId, appVersion, hotPathFilePatch, hashCode, fileName,
                 return callback(err);
             }
             var patchVersion;
-            sql = "SELECT id,patch_type,patch_status FROM hotFix GROUP BY id DESC";
+            sql = "SELECT id,patch_type,patch_status FROM appHotFix GROUP BY id DESC";
             connection.query(sql, [], function (err, rows) {
                 if (err) {
                     return connection.rollback(function () {
@@ -45,7 +45,7 @@ HotFix.save = function (appId, appVersion, hotPathFilePatch, hashCode, fileName,
                 var iqianjin = 'iqianjin';
 
                 var date = new Date().Format("yyyy-MM-dd");
-                sql = "INSERT INTO hotFix SET app_id ='" + appId + "',version_name='" + iqianjin + "',hashCode='" + hashCode + "',appVersion='" + appVersion + "',patch_size='" + fileSize + "',file_hash='" + fileName + "',create_date='" + date + "',description='" + description + "',hotUrl='" + hotPathFilePatch + "',patch_status='" + patch_status + "',patch_type='" + patch_type + "',tags='" + tags + "',patchVersion='" + patchVersion + "';";
+                sql = "INSERT INTO appHotFix SET app_id ='" + appId + "',version_name='" + iqianjin + "',hashCode='" + hashCode + "',appVersion='" + appVersion + "',patch_size='" + fileSize + "',file_hash='" + fileName + "',create_date='" + date + "',description='" + description + "',hotUrl='" + hotPathFilePatch + "',patch_status='" + patch_status + "',patch_type='" + patch_type + "',tags='" + tags + "',patchVersion='" + patchVersion + "';";
 
                 console.log(sql);
 
@@ -73,7 +73,7 @@ HotFix.save = function (appId, appVersion, hotPathFilePatch, hashCode, fileName,
 };
 
 
-HotFix.saveABsetting = function (appId, appVersion, hotPathFilePatch, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, a, b, callback) {
+HotFix.saveABsetting = function (appId, appVersion, hotPathFilePatch, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, abtestting, callback) {
     db.getConnection(function (err, connection) {
 
         if (err) {
@@ -85,7 +85,7 @@ HotFix.saveABsetting = function (appId, appVersion, hotPathFilePatch, hashCode, 
                 return callback(err);
             }
             var patchVersion;
-            sql = "SELECT patch_type FROM hotfix WHERE patch_type = '7'";
+            sql = "SELECT patch_type FROM appHotFix WHERE patch_type = '7'";
             connection.query(sql, [], function (err, rows) {
                 if (err) {
                     return connection.rollback(function () {
@@ -98,7 +98,7 @@ HotFix.saveABsetting = function (appId, appVersion, hotPathFilePatch, hashCode, 
                     });
                 }
 
-                sql = "SELECT id,patch_type,patch_status FROM hotFix GROUP BY id DESC";
+                sql = "SELECT id,patch_type,patch_status FROM appHotFix GROUP BY id DESC";
 
                 connection.query(sql, [], function (err, rows) {
                     if (err) {
@@ -115,7 +115,7 @@ HotFix.saveABsetting = function (appId, appVersion, hotPathFilePatch, hashCode, 
                     var iqianjin = 'iqianjin';
 
                     var date = new Date().Format("yyyy-MM-dd");
-                    sql = "INSERT INTO hotFix SET app_id ='" + appId + "',version_name='" + iqianjin + "',hashCode='" + hashCode + "',appVersion='" + appVersion + "',patch_size='" + fileSize + "',file_hash='" + fileName + "',create_date='" + date + "',description='" + description + "',hotUrl='" + hotPathFilePatch + "',patch_status='" + patch_status + "',patch_type='" + patch_type + "',tags='" + tags + "',patchVersion='" + patchVersion + "',a='" + a + "',b='" + b + "';";
+                    sql = "INSERT INTO appHotFix SET app_id ='" + appId + "',version_name='" + iqianjin + "',hashCode='" + hashCode + "',appVersion='" + appVersion + "',patch_size='" + fileSize + "',file_hash='" + fileName + "',create_date='" + date + "',description='" + description + "',hotUrl='" + hotPathFilePatch + "',patch_status='" + patch_status + "',patch_type='" + patch_type + "',tags='" + tags + "',patchVersion='" + patchVersion + "',absetting='" + abtestting + "';";
 
                     console.log(sql);
 
@@ -158,12 +158,12 @@ HotFix.managerHotFix = function (status, hashCode, callback) {
         connection.beginTransaction(function (err) {
             if (status == 0) {  //删除
 
-                sql = "DELETE FROM hotFix WHERE hashCode = '" + hashCode + "';";
+                sql = "DELETE FROM apphotfix WHERE hashCode = '" + hashCode + "';";
 
             } else if (status == 1 || status == 2) {  //发布补丁
-                sql = "UPDATE hotFix SET patch_status = 1  WHERE hashCode = '" + hashCode + "';";
+                sql = "UPDATE appHotFix SET patch_status = 1  WHERE hashCode = '" + hashCode + "';";
             } else if (status == 3 || status == 4) {
-                sql = "UPDATE hotFix SET patch_status = 0  WHERE hashCode = '" + hashCode + "';";
+                sql = "UPDATE appHotFix SET patch_status = 0  WHERE hashCode = '" + hashCode + "';";
             }
 
             console.log("sql = " + sql)
@@ -206,7 +206,7 @@ HotFix.getHotFixRow = function (hashCode, callback) {
                 return callback(err);
             }
 
-            sql = "SELECT * FROM hotFix WHERE hashCode = '" + hashCode + "';";
+            sql = "SELECT * FROM appHotFix WHERE hashCode = '" + hashCode + "';";
 
             connection.query(sql, [], function (err, rows) {
                 if (err) {
@@ -247,7 +247,7 @@ HotFix.getHotFixRows = function (callback) {
                 return callback(err);
             }
 
-            sql = "SELECT * FROM hotFix;";
+            sql = "SELECT * FROM appHotFix;";
 
             connection.query(sql, [], function (err, rows) {
                 if (err) {

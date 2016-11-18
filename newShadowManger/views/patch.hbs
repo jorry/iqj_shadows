@@ -9,6 +9,8 @@
 
         </div>
         <div class="container-fluid">
+            <h5 id="appId" hidden>{{row.app_id}}</h5>
+
             <table class="table table-bordered">
                 <tr>
                     <td>应用名称:{{row.version_name}}</td>
@@ -292,7 +294,8 @@
                                 success: function (res, textStatus, jqXHR) {
                                     dialog.find('.bootbox-body').html('修改成功!');
                                     setTimeout(function () {
-                                        window.location.href = window.location.href;
+//                                        window.location.href = window.location.href;
+                                        document.location.href = '/emergency?appId='+ $("#appId").text();
                                     }, 500);
                                 },
                                 error: function (XMLHttpRequest, textStatus, errorThrown) {

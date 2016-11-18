@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <input  type="hidden"   id="abtesttingAppUid" value={{appUid}}>
+    <input  type="hidden"   id="AppUid" value={{appUid}}>
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -159,7 +159,7 @@
 
                 $("#abtestting").click(function(){
 
-                    var appUid = document.getElementById("abtesttingAppUid").value;
+                    var appUid = document.getElementById("AppUid").value;
 
                     var url = '/absetting?appId=' + appUid;
 
