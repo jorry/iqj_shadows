@@ -45,6 +45,10 @@
                 {{else}}
                     <input type="button" id="stop_publish_gray" value="停止灰度发布"/>
                 {{/if}}
+
+                {{#if abtest}}
+                    <input type="button" id="absetting" value="查看详情"/>
+                {{/if}}
             {{/if}}
         </div>
     </div>
@@ -90,8 +94,8 @@
                         }
 
                         var temp = $("#hashCode").text();
-                        var index = temp.indexOf(" ")+1;
-                        var hashCode = temp.substr(index,temp.length);
+                        var index = temp.indexOf(" ") + 1;
+                        var hashCode = temp.substr(index, temp.length);
 
                         var dialog = bootbox.dialog({
                             message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
@@ -99,7 +103,7 @@
 
                         dialog.init(function () {
                             jQuery.ajax({
-                                url: "/updatePatchStatus?hashCode=" +hashCode + "&update=1",
+                                url: "/updatePatchStatus?hashCode=" + hashCode + "&update=1",
                                 type: 'get',
                                 success: function (res, textStatus, jqXHR) {
                                     dialog.find('.bootbox-body').html('修改成功!');
@@ -138,8 +142,8 @@
                         }
 
                         var temp = $("#hashCode").text();
-                        var index = temp.indexOf(" ")+1;
-                        var hashCode = temp.substr(index,temp.length);
+                        var index = temp.indexOf(" ") + 1;
+                        var hashCode = temp.substr(index, temp.length);
 
                         var dialog = bootbox.dialog({
                             message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
@@ -147,7 +151,7 @@
 
                         dialog.init(function () {
                             jQuery.ajax({
-                                url: "/updatePatchStatus?hashCode=" +hashCode + "&update=3",
+                                url: "/updatePatchStatus?hashCode=" + hashCode + "&update=3",
                                 type: 'get',
                                 success: function (res, textStatus, jqXHR) {
                                     dialog.find('.bootbox-body').html('修改成功!');
@@ -185,8 +189,8 @@
                         }
 
                         var temp = $("#hashCode").text();
-                        var index = temp.indexOf(" ")+1;
-                        var hashCode = temp.substr(index,temp.length);
+                        var index = temp.indexOf(" ") + 1;
+                        var hashCode = temp.substr(index, temp.length);
 
                         var dialog = bootbox.dialog({
                             message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
@@ -194,7 +198,7 @@
 
                         dialog.init(function () {
                             jQuery.ajax({
-                                url: "/updatePatchStatus?hashCode=" +hashCode + "&update=4",
+                                url: "/updatePatchStatus?hashCode=" + hashCode + "&update=4",
                                 type: 'get',
                                 success: function (res, textStatus, jqXHR) {
                                     dialog.find('.bootbox-body').html('修改成功!');
@@ -210,7 +214,6 @@
                     }
                 });
             });
-
 
 
             $('#normal_publish').click(function () {
@@ -234,8 +237,8 @@
                         }
 
                         var temp = $("#hashCode").text();
-                        var index = temp.indexOf(" ")+1;
-                        var hashCode = temp.substr(index,temp.length);
+                        var index = temp.indexOf(" ") + 1;
+                        var hashCode = temp.substr(index, temp.length);
 
                         var dialog = bootbox.dialog({
                             message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
@@ -243,7 +246,7 @@
 
                         dialog.init(function () {
                             jQuery.ajax({
-                                url: "/updatePatchStatus?hashCode=" +hashCode + "&update=2",
+                                url: "/updatePatchStatus?hashCode=" + hashCode + "&update=2",
                                 type: 'get',
                                 success: function (res, textStatus, jqXHR) {
                                     dialog.find('.bootbox-body').html('修改成功!');
@@ -260,7 +263,13 @@
                 });
             });
 
-
+            $('#absetting').click(function(){
+                var temp = $("#hashCode").text();
+                var index = temp.indexOf(" ") + 1;
+                var hashCode = temp.substr(index, temp.length);
+                //跳转结果页 GET
+                document.location.href = '/abuser?hashCode='+hashCode;
+            });
 
             $('#del_patch').click(function () {
                 bootbox.confirm({
@@ -280,8 +289,8 @@
                             return;
                         }
                         var temp = $("#hashCode").text();
-                        var index = temp.indexOf(" ")+1;
-                        var hashCode = temp.substr(index,temp.length);
+                        var index = temp.indexOf(" ") + 1;
+                        var hashCode = temp.substr(index, temp.length);
 
                         var dialog = bootbox.dialog({
                             message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
@@ -289,13 +298,13 @@
 
                         dialog.init(function () {
                             jQuery.ajax({
-                                url: "/updatePatchStatus?hashCode=" +hashCode + "&update=0",
+                                url: "/updatePatchStatus?hashCode=" + hashCode + "&update=0",
                                 type: 'get',
                                 success: function (res, textStatus, jqXHR) {
                                     dialog.find('.bootbox-body').html('修改成功!');
                                     setTimeout(function () {
 //                                        window.location.href = window.location.href;
-                                        document.location.href = '/emergency?appId='+ $("#appId").text();
+                                        document.location.href = '/emergency?appId=' + $("#appId").text();
                                     }, 500);
                                 },
                                 error: function (XMLHttpRequest, textStatus, errorThrown) {

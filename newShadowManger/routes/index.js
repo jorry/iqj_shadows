@@ -17,6 +17,8 @@ var AppUtil = require('../models/AppIdUtil');
 var appInfoDB = require("../models/appInfoDB");
 
 var User = require("../models/user");
+var absetting = require("../models/absetting");
+
 
 var appVersionInfo = require('../models/versionDB');
 
@@ -67,7 +69,7 @@ router.get('/', function (req, res, nnext) {
 });
 
 //更新补丁状态
-router.get('/updatePatchStatus', ensureAuthenticated,function (req, res, next) {
+router.get('/updatePatchStatus', ensureAuthenticated, function (req, res, next) {
     var hashCode = req.query.hashCode;
     var update = req.query.update;
     console.log(hashCode + "   " + update);
@@ -100,7 +102,7 @@ var response = function () {
     this.msg;
 };
 
-router.get('/createVersion', ensureAuthenticated,function (req, res, next) {
+router.get('/createVersion', ensureAuthenticated, function (req, res, next) {
 
     var appVersion = req.query.appUid;
 
@@ -134,78 +136,84 @@ router.get('/createVersion', ensureAuthenticated,function (req, res, next) {
 //注意上传界面中的 <input type="file" name="avatar"/>中的name必须是下面代码中指定的名称
 router.post('/singleUpload', upload.single('file'), function (req, res, next) {
 
+    console.log('文件地址:' + hotPathFilePatch)
+
     var file = req.file;
 
     var hotPathFilePatch = uploadFolder + '/' + file.originalname;
-    console.log('文件地址:' + hotPathFilePatch)
+
 
     var rs = fs.createReadStream(hotPathFilePatch);
+
+    var description = req.body.description;
+    var patch_type = req.body.patch_type;
+    var appVersion;
+    var appUid;
+
+    var a, b;
+
+    var abTestting = false;
+    if (patch_type == 0) {
+        var tempVersion = req.body.gray_appVersion;
+        appVersion = tempVersion.substr(0, tempVersion.length - 1);
+        var tempUid = req.body.gray_appUid;
+        appUid = tempUid.substr(0, tempUid.length);
+    } else if (patch_type == 1) {
+        var tempVersion = req.body.appVersion;
+        appVersion = tempVersion.substr(0, tempVersion.length - 1);
+        var tempUid = req.body.appUid;
+        appUid = tempUid.substr(0, tempUid.length);
+    } else if (patch_type == 5) {    //修复H5 引擎
+        console.log('-----patch_type == 1000 = ');
+        appVersion = '1000';
+        appUid = req.body.appUid;
+    } else if (patch_type == 6) {    //全量更新
+        console.log('-----patch_type == 6 = ')
+        appVersion = '1000';
+        appUid = req.body.gray_appUid;
+    } else if (patch_type == 7) {    // A/B TESTTING
+        console.log('-----patch_type == 1000 = ')
+
+        appUid = req.body.appUid;
+        a = req.body.aTest;
+        appVersion = a;
+        abTestting = true;
+        console.log(a + "  patch_type == 7  " + b)
+    } else if (patch_type == 1000) {    //全量更新
+        console.log('-----patch_type == 1000 = ')
+        appVersion = '1000';
+        appUid = req.body.appUid;
+    } else if (patch_type == 8) {    //单用户上传
+        console.log('-----patch_type == 8 = ')
+        appVersion = '1000';
+        appUid = req.body.appUid;
+    }
+
+    var patch_status = 0;
+    var tags = req.body.tags;
 
     var hash = crypto.createHash('md5');
     rs.on('data', hash.update.bind(hash));
 
+
+
     rs.on('end', function () {
         var hashCode = hash.digest('hex');
 
-
-        var hashCode = hashCode;
         var fileSize = file.size;
         var fileName = file.originalname;
 
-        var description = req.body.description;
-        var patch_type = req.body.patch_type;
-        var appVersion;
-        var appUid;
-
-        var a,b;
-
-        var abTestting = false;
-        if (patch_type == 0) {
-            var tempVersion = req.body.gray_appVersion;
-            appVersion = tempVersion.substr(0, tempVersion.length - 1);
-            var tempUid = req.body.gray_appUid;
-            appUid = tempUid.substr(0, tempUid.length);
-        } else if (patch_type == 1) {
-            var tempVersion = req.body.appVersion;
-            appVersion = tempVersion.substr(0, tempVersion.length - 1);
-            var tempUid = req.body.appUid;
-            appUid = tempUid.substr(0, tempUid.length);
-        } else if (patch_type == 5) {    //修复H5 引擎
-            console.log('-----patch_type == 1000 = ');
-            appVersion = '1000';
-            appUid = req.body.appUid;
-        } else if (patch_type == 6) {    //全量更新
-            console.log('-----patch_type == 6 = ')
-            appVersion = '1000';
-            appUid = req.body.gray_appUid;
-        } else if (patch_type == 7) {    // A/B TESTTING
-            console.log('-----patch_type == 1000 = ')
-            appVersion = '1001';
-            appUid = req.body.appUid;
-            a = req.body.aTest;
-            b = req.body.bTest;
-            abTestting =true;
-            console.log(a+"  patch_type == 7  "+b)
-        } else if (patch_type == 1000) {    //全量更新
-            console.log('-----patch_type == 1000 = ')
-            appVersion = '1000';
-            appUid = req.body.appUid;
-        }
-
-        var patch_status = 0;
-        var tags = req.body.tags;
-
         console.log('appVersion========' + appVersion + '//////////appUid ======== ' + appUid);
-        if (abTestting){
-            var abtestting = a+'/'+b;
-            hotDB.saveABsetting(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, abtestting,function (err) {
+        if (abTestting) {
+            var abtestting = a + '/' + b;
+            hotDB.saveABsetting(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, abtestting, function (err) {
                 console.log('err' + err);
                 if (err) {
                     return next(err);
                 }
                 res.redirect('/appDetail?appUid=' + appUid);
             });
-        }else{
+        } else {
             hotDB.save(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, function (err) {
                 console.log('err' + err);
                 if (err) {
@@ -214,8 +222,6 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
                 res.redirect('/appDetail?appUid=' + appUid);
             });
         }
-
-
 
 
         console.log(req.file);
@@ -234,7 +240,7 @@ router.get('/hotfixAddDB', function (req, res, next) {
 })
 
 //灰度设置提交调用,先更新灰度数据库,然后在更新总数据库(在代码回滚界面用到此数据库)
-router.post('/graySettingPost',ensureAuthenticated, function (req, res, nnext) {
+router.post('/graySettingPost', ensureAuthenticated, function (req, res, nnext) {
     var us = req.body.value;
     var hashCode = '123';
     var hotFixType = 3;
@@ -263,7 +269,7 @@ router.post('/graySettingPost',ensureAuthenticated, function (req, res, nnext) {
 
 });
 
-router.get('/hotfixEngine', ensureAuthenticated,function (req, res, next) {
+router.get('/hotfixEngine', ensureAuthenticated, function (req, res, next) {
 
     res.render('hotfixEngine', {
         title: '修复H5交互引擎',
@@ -272,7 +278,7 @@ router.get('/hotfixEngine', ensureAuthenticated,function (req, res, next) {
 });
 
 
-router.get('/hotfixResult', ensureAuthenticated,function (req, res, next) {
+router.get('/hotfixResult', ensureAuthenticated, function (req, res, next) {
 
     res.render('hotfixResult', {
         title: '补丁完成查看'
@@ -286,7 +292,7 @@ function addSaveHot(hashCode, hotFixType, revert) {
     });
 }
 
-router.get('/hotfixUploadFinish', ensureAuthenticated,function (req, res, next) {
+router.get('/hotfixUploadFinish', ensureAuthenticated, function (req, res, next) {
     addSaveHot('10002', 1, 1)
     console.log('----hotfixUploadFinish--跳转,进来了吗');
 
@@ -367,7 +373,7 @@ passport.deserializeUser(function (username, done) {
     });
 });
 
-router.get('/grayUserSetting',ensureAuthenticated, function (req, res, next) {
+router.get('/grayUserSetting', ensureAuthenticated, function (req, res, next) {
     console.log('----grayUserSetting--跳转,进来了吗');
     res.render('grayUserSetting', {
         title: '灰度设置'
@@ -375,36 +381,34 @@ router.get('/grayUserSetting',ensureAuthenticated, function (req, res, next) {
 });
 
 
-router.get('/absetting',ensureAuthenticated, function (req, res, next) {
+router.get('/absetting', ensureAuthenticated, function (req, res, next) {
 
 
     var appId = req.query.appId;
 
-    console.log('----abSetting--跳转,进来了吗'+appId);
+    console.log('----abSetting--跳转,进来了吗' + appId);
 
-    appVersionInfo.selectAll(appId,function(err,rows){
+    appVersionInfo.selectAll(appId, function (err, rows) {
 
         if (err) {
             console.error(err);
             return next(err);
         }
 
-        console.log('----abSetting--长度  '+rows.length);
+        console.log('----abSetting--长度  ' + rows.length);
 
         res.render('abSetting', {
             title: '设置a/b用户',
-            appUid:appId,
-            abrows:rows
+            appUid: appId,
+            abrows: rows
         });
     });
-
-
 
 
 });
 
 
-router.get('/appDetail', ensureAuthenticated,function (req, res, next) {
+router.get('/appDetail', ensureAuthenticated, function (req, res, next) {
 
     var appUid = req.query.appUid;
 
@@ -415,10 +419,9 @@ router.get('/appDetail', ensureAuthenticated,function (req, res, next) {
         }
         var versionArray = rows;
         versionArray.forEach(function (row) {
-            console.log('日期='+row.created_at);
+            console.log('日期=' + row.created_at);
         });
         console.log('appId = ' + appUid)
-
 
 
         appInfoDB.getAppDetail(appUid, function (err, row) {
@@ -441,8 +444,7 @@ router.get('/appDetail', ensureAuthenticated,function (req, res, next) {
 });
 
 
-
-router.get('/setABTestting',ensureAuthenticated, function (req, res, next) {
+router.get('/setABTestting', ensureAuthenticated, function (req, res, next) {
     var A = req.query.a;
     var B = req.query.b;
 
@@ -458,7 +460,7 @@ router.get('/setABTestting',ensureAuthenticated, function (req, res, next) {
 });
 
 
-router.get('/createApp',ensureAuthenticated, function (req, res, next) {
+router.get('/createApp', ensureAuthenticated, function (req, res, next) {
 
     var appName = req.query.appname;
     var des = req.query.description;
@@ -478,7 +480,7 @@ router.get('/createApp',ensureAuthenticated, function (req, res, next) {
     });
 });
 
-router.get('/patchManager', ensureAuthenticated,function (req, res, next) {
+router.get('/patchManager', ensureAuthenticated, function (req, res, next) {
 
     var appVersion = req.query.versionName;
     var appUid = req.query.appVersion;
@@ -521,7 +523,7 @@ router.get('/patchManager', ensureAuthenticated,function (req, res, next) {
 });
 
 //app 全量更新通道
-router.get('/emergency',ensureAuthenticated, function (req, res, next) {
+router.get('/emergency', ensureAuthenticated, function (req, res, next) {
     hotFix.getHotFixRowsEmergency(function (err, rows) {
 
         console.log('JSON', 'json = ' + rows);
@@ -616,7 +618,7 @@ router.get('/app', function (req, res, next) {
 router.get('/patch', function (req, res, next) {
     var hashCode = req.query.hashCode;
     var appId = req.query.appId;
-    console.log(appId+'hashCode = ' + hashCode);
+    console.log(appId + 'hashCode = ' + hashCode);
     hotDB.getHotFixRow(hashCode, function (err, row) {
         if (err) {
             return next(err);
@@ -637,19 +639,24 @@ router.get('/patch', function (req, res, next) {
 
         var type = row.patch_type;
 
+        var abtest ;
+        if (type == 7){
+            abtest = 7;
+        }
 
-        if (type == 0) {    //灰度
-            type = '';
-        } else {
-            type = 'type';
-        }// 灰度
+        //if (type == 0) {    //灰度
+        //    type = '';
+        //} else {
+        //    type = 'type';
+        //}// 灰度
 
-        console.log(status + 'type = ' + type);
+        console.log(abtest + 'type = ' + type);
 
         res.render('patch', {
             title: '发布补丁',
             status: status,
             type: type,
+            abtest:abtest,
             row: row
         });
     })
@@ -699,6 +706,7 @@ router.get('/about', function (req, res, next) {
 });
 
 router.get('/userpositon', ensureAuthenticated, function (req, res, next) {
+    console.log('userpositon = ' + req.query.appId);
     hotFix.addOneUserStep(function (err, result) {
         if (err) {
             next(err);
@@ -706,7 +714,8 @@ router.get('/userpositon', ensureAuthenticated, function (req, res, next) {
         res.render('userpositon', {
             title: '单点用户行为',
             arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
-            oneUser: result
+            oneUser: result,
+            appId: req.query.appId
         });
     })
 
@@ -719,7 +728,7 @@ router.post('/oneUserDetail', function (req, res, next) {
     console.log('id = ' + id);
     hotFix.getOneUserStep(id, function (err, result) {
         if (err) {
-            next(err);
+            return next(err);
         }
         res.render('oneUserDetail', {
             title: id,
@@ -731,41 +740,20 @@ router.post('/oneUserDetail', function (req, res, next) {
 
 
 router.get('/abuser', function (req, res, next) {
-    res.render('abuser', {
-        title: 'index',
-        arr: [{sch: 'hotfix', ab: 'abs', lib: '', abt: '', log: ''}],
-        abuser: [{
-            id: 1,
-            pageId: '登录',
-            buttonId: '获取验证码',
-            Apage: 110,
-            Bpage: 10
-        }, {
-            id: 2,
-            pageId: '支付',
-            buttonId: '获取验证码',
-            Apage: 110,
-            Bpage: 10
-        }, {
-            id: 3,
-            pageId: '购买充值',
-            buttonId: '获取验证码',
-            Apage: 110,
-            Bpage: 10
-        }, {
-            id: 4,
-            pageId: '提现',
-            buttonId: '获取验证码',
-            Apage: 110,
-            Bpage: 10
-        }, {
-            id: 5,
-            pageId: '注册',
-            buttonId: '获取验证码',
-            Apage: 110,
-            Bpage: 10
-        }]
+
+    var hashCode = req.query.hashCode;
+
+    absetting.selectAllABsetting(hashCode,function (err, obj) {
+        if (err) {
+            return next(err);
+        }
+        console.log('absetting  = '+obj.acount,obj.bcount,obj.deiscriton);
+        res.render('abuser', {
+            title: 'abuser',
+            abuser:obj
+        });
     });
+
 });
 
 //登录验证

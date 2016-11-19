@@ -253,7 +253,6 @@ HotFix.hotReverListView = function (callback) {
 
 HotFix.addOneUserStep = function (callback) {
     db.getConnection(function (err, connection) {
-        console.log('进入到hotFix 数据库');
         if (err) {
             return
         }
@@ -263,10 +262,7 @@ HotFix.addOneUserStep = function (callback) {
             }
 
             sql = "SELECT * FROM addOneUserStep ;";
-
-            console.log('进入到hotFix 数据库-查询语句是: ' + sql);
             connection.query(sql, function (err, rows) {
-                console.log('进入到hotFix 数据库-查询结果: err ' + err + "   rows = " + rows);
                 if (err) {
                     return connection.rollback(function () {
                         callback(err);

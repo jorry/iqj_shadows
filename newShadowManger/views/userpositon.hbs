@@ -1,4 +1,63 @@
 <div class="container">
+    <div class="modal fade" id="allExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <form id="create_patch_form_all" action="/singleUpload" method="post"
+                          enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="description" class="form-control-label">补丁描述:</label>
+                            <input type="text" class="form-control" id="descriptionGray" name="description"
+                                   maxlength="32"
+                                   placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="imei" class="form-control-label">用户设备的IMEI:</label>
+                            <input type="text" class="form-control" id="imei" name="description"
+                                   maxlength="32"
+                                   placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="patch_file_gray" class="form-control-label">补丁文件:</label>
+                            <input type="file" class="form-control" id="patch_file_gray" name="file">
+                        </div>
+
+                        <p class="text-center"><font color="#dc143c" id="err_msg"></font></p>
+                        <input type="hidden" name="patch_type" value="8"/>
+                        <input type="hidden" name="gray_appUid" value={{appUid}}>
+                        <input type="hidden" name="gray_appVersion" value={{appVersion}}/>
+                    </form>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="create_patch_all">创建</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Login-box">
+        <h5 style="margin-left: 25px">当用个别用户反馈说,在使用app的过程中,某些功能或者页面不能用,这个时候需要使用此功能来完成</h5>
+        <h5 style="margin-left: 25px">TODO:此功能需要和自己的app用户表对接,填写用用户的IMEI</h5>
+
+    </div>
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <p>
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                            data-target="#allExampleModal" data-whatever="@getbootstrap"> 用户行为补丁
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
     <div class="row">
 
         <div class="col-lg-10">
@@ -24,12 +83,12 @@
                             {{#each oneUser}}
                                 <tr>
                                     <td class="id">{{id}}</td>
-                                    <td >{{imei}}</td>
+                                    <td>{{imei}}</td>
                                     <td>{{appVersion}}</td>
                                     <td>{{osVersion}}</td>
                                     <td>{{net}}</td>
                                     <td>
-                                        <button  class="one_user_detail btn btn-sm">查看详情</button>
+                                        <button class="one_user_detail btn btn-sm">查看详情</button>
                                     </td>
                                 </tr>
                             {{/each}}
@@ -40,6 +99,60 @@
             </div>
         </div>
     </div>
+
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="../public/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../public/css//sb-admin.css')" rel="stylesheet">
+
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://bootboxjs.com/bootbox.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#create_patch_all").click(function () {
+
+                if ($("#imei").val().length == 0) {
+                    $("#err_msg").text('请填写设备IMEI');
+                    return
+                }
+
+                if ($("#descriptionGray").val().length == 0) {
+                    $("#err_msg").text('请输入补丁描述');
+                    return
+                }
+                if ($("#patch_file_gray").val().length == 0) {
+                    $("#err_msg").text('请选择补丁文件');
+                    return
+                }
+
+                if (!$("#patch_file_gray").val().endsWith('.apk') && !$("#patch_file_gray").val().endsWith('.jar') && !$("#patch_file_gray").val().endsWith('.zip') && !$("#patch_file_gray").val().endsWith('.dex')) {
+                    $("#err_msg").text('补丁文件的名字必须以.apk .jar .zip .dex结尾');
+                    $("#patch_file_gray").val('');
+                    return;
+                }
+                $("#err_msg").text('');
+                var dialog = bootbox.dialog({
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> 正在处理...</p>'
+                });
+                dialog.init(function () {
+                    setTimeout(function () {
+                        window.location.href = window.location.href;
+                    }, 5000);
+                });
+                $("#create_patch_form_all").submit();
+            });
+
+
+        });
+
+    </script>
+
+
     <!-- footer -->
     <div class="footer">
         <p>© Company 2016</p>

@@ -8,28 +8,17 @@
     <div class="panel-body">
         <div class="table-responsive">
             <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>页面</th>
-                    <th>按钮</th>
-                    <th>A方案</th>
-                    <th>B方案</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                {{#each abuser}}
+                <table class="table table-bordered">
                     <tr>
-                        <td>{{id}}</td>
-                        <td>{{pageId}}</td>
-                        <td>{{buttonId}}</td>
-                        <td>{{Apage}}</td>
-                        <td>{{Bpage}}</td>
-
+                        <td>A方案下载个数:{{abuser.acount}}</td>
                     </tr>
-                {{/each}}
-                </tbody>
+                    <tr>
+                        <td>B方案下载个数: {{abuser.bcount}}</td>
+                    </tr>
+                    <tr>
+                        <td>补丁描述: {{abuser.deiscriton}}</td>
+                    </tr>
+                </table>
             </table>
         </div>
     </div>
