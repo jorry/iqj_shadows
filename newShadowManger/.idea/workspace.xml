@@ -21,23 +21,61 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="user.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/user.js">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="23" selection-end-column="7" />
-              <folding>
-                <element signature="e#0#53#0" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="-14.925926">
+              <caret line="752" column="22" selection-start-line="752" selection-start-column="19" selection-end-line="752" selection-end-column="22" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="versionDB.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/models/versionDB.js">
+      <file leaf-file-name="dbhelper.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/dbhelper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38018432">
-              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="abuser.hbs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/abuser.hbs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.37604457">
+              <caret line="18" column="54" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="appInfoDB.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/appInfoDB.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="16" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="appDetail.hbs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/appDetail.hbs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-26.208334">
+              <caret line="134" column="77" selection-start-line="134" selection-start-column="77" selection-end-line="134" selection-end-column="77" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="absetting.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/absetting.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-20.925926">
+              <caret line="48" column="43" selection-start-line="48" selection-start-column="32" selection-end-line="48" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -87,20 +125,20 @@
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/views/index.hbs" />
         <option value="$PROJECT_DIR$/views/abSetting.hbs" />
-        <option value="$PROJECT_DIR$/views/appDetail.hbs" />
         <option value="$PROJECT_DIR$/views/emergency.hbs" />
         <option value="$PROJECT_DIR$/views/layout.hbs" />
         <option value="$PROJECT_DIR$/views/userpositon.hbs" />
         <option value="$PROJECT_DIR$/views/patch.hbs" />
-        <option value="$PROJECT_DIR$/views/abuser.hbs" />
-        <option value="$PROJECT_DIR$/routes/index.js" />
-        <option value="$PROJECT_DIR$/models/dbhelper.js" />
         <option value="$PROJECT_DIR$/models/user.js" />
         <option value="$PROJECT_DIR$/models/appInfoDB.js" />
-        <option value="$PROJECT_DIR$/models/absetting.js" />
         <option value="$PROJECT_DIR$/models/hotDB.js" />
         <option value="$PROJECT_DIR$/models/hotFix.js" />
         <option value="$PROJECT_DIR$/models/versionDB.js" />
+        <option value="$PROJECT_DIR$/views/appDetail.hbs" />
+        <option value="$PROJECT_DIR$/models/dbhelper.js" />
+        <option value="$PROJECT_DIR$/models/absetting.js" />
+        <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/views/abuser.hbs" />
       </list>
     </option>
   </component>
@@ -112,10 +150,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="13" />
+    <option name="x" value="1818" />
     <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="803" />
+    <option name="width" value="1920" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -172,39 +210,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="newShadowManger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="newShadowManger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="newShadowManger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="newShadowManger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="file" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uploads" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="newShadowManger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="newShadowManger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -219,7 +239,7 @@
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
-    <property name="SearchEverywhereHistoryKey" value="versionDB&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/models/versionDB.js&#10;app_list&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/app_list.hbs&#10;dbhelper&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/models/dbhelper.js&#10;patchManager&#9;null&#9;null&#10;appDetail&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/appDetail.hbs&#10;emergency&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/emergency.hbs&#10;patch&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/patch.hbs&#10;layout&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/layout.hbs&#10;hotDB&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/models/hotDB.js&#10;absetting&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/abSetting.hbs&#10;patchm&#9;null&#9;null&#10;LO&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/login.hbs&#10;userpositon&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/userpositon.hbs&#10;oneUserDetail&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/oneUserDetail.hbs&#10;publicManagerModel&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/publicManagerModel.hbs&#10;ap&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/appDetail.hbs&#10;hotfixResult&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/hotfixResult.hbs&#10;INDE&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/routes/index.js&#10;APP&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/app_list.hbs&#10;index&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/node_modules/multer/index.js&#10;INDEX&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/routes/index.js&#10;hotfixEngine&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/hotfixEngine.hbs&#10;appHostFixState&#9;null&#9;null&#10;INDEX.&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/index.hbs&#10;inde&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/routes/index.js&#10;hotfixRevert&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/newShadowManger/views/hotfixRevert.hbs&#10;hotfixUploadFinish&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/newShadowManger/views/hotfixUploadFinish.hbs" />
+    <property name="SearchEverywhereHistoryKey" value="abuser&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/abuser.hbs&#10;absetting&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/models/absetting.js&#10;versionDB&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/models/versionDB.js&#10;app_list&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/app_list.hbs&#10;dbhelper&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/models/dbhelper.js&#10;patchManager&#9;null&#9;null&#10;appDetail&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/appDetail.hbs&#10;emergency&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/emergency.hbs&#10;patch&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/patch.hbs&#10;layout&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/layout.hbs&#10;hotDB&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/models/hotDB.js&#10;patchm&#9;null&#9;null&#10;LO&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/login.hbs&#10;userpositon&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/userpositon.hbs&#10;oneUserDetail&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/oneUserDetail.hbs&#10;publicManagerModel&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/publicManagerModel.hbs&#10;ap&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/appDetail.hbs&#10;hotfixResult&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/hotfixResult.hbs&#10;INDE&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/routes/index.js&#10;APP&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/app_list.hbs&#10;index&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/node_modules/multer/index.js&#10;INDEX&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/routes/index.js&#10;hotfixEngine&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/hotfixEngine.hbs&#10;appHostFixState&#9;null&#9;null&#10;INDEX.&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/views/index.hbs&#10;inde&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/git/newShadowManger/routes/index.js&#10;hotfixRevert&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/newShadowManger/views/hotfixRevert.hbs&#10;hotfixUploadFinish&#9;FILE&#9;file:///Users/iqianjin-liujiawei/Desktop/shadowsManger/newShadowManger/views/hotfixUploadFinish.hbs" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -321,18 +341,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="13" y="23" width="1440" height="803" extended-state="0" />
-    <editor active="false" />
+    <frame x="1818" y="23" width="1920" height="1057" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22057787" sideWeight="0.843962" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16482359" sideWeight="0.843962" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881355" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4124294" sideWeight="0.50669485" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32574257" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.122696154" sideWeight="0.15603799" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867134" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35021096" sideWeight="0.49330515" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20207255" sideWeight="0.49330515" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4149086" sideWeight="0.49815693" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.307772" sideWeight="0.49815693" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.49815693" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -353,9 +373,9 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.122696154" sideWeight="0.15603799" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867134" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35021096" sideWeight="0.49330515" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4149086" sideWeight="0.49815693" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22057787" sideWeight="0.843962" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20207255" sideWeight="0.49330515" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.307772" sideWeight="0.49815693" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16482359" sideWeight="0.843962" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32574257" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -611,14 +631,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/appDetail.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6219512">
-          <caret line="48" column="14" selection-start-line="40" selection-start-column="7" selection-end-line="48" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/emergency.hbs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.2584857">
@@ -673,14 +685,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/abuser.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6585366">
-          <caret line="18" column="53" selection-start-line="18" selection-start-column="53" selection-end-line="18" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/passport/lib/middleware/authenticate.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3778802">
@@ -721,14 +725,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="472" column="25" selection-start-line="472" selection-start-column="25" selection-end-line="472" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/AppIdUtil.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -736,30 +732,6 @@
           <folding>
             <element signature="e#0#53#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/absetting.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/appInfoDB.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27419356">
-          <caret line="36" column="4" selection-start-line="36" selection-start-column="4" selection-end-line="41" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/dbhelper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="8" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -791,8 +763,56 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/versionDB.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38018432">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.4072165">
+          <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/appDetail.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-26.208334">
+          <caret line="134" column="77" selection-start-line="134" selection-start-column="77" selection-end-line="134" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/appInfoDB.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="16" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/dbhelper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/absetting.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.925926">
+          <caret line="48" column="43" selection-start-line="48" selection-start-column="32" selection-end-line="48" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.925926">
+          <caret line="752" column="22" selection-start-line="752" selection-start-column="19" selection-end-line="752" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/abuser.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37604457">
+          <caret line="18" column="54" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
           <folding />
         </state>
       </provider>

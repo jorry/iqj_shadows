@@ -205,7 +205,7 @@ router.post('/singleUpload', upload.single('file'), function (req, res, next) {
 
         console.log('appVersion========' + appVersion + '//////////appUid ======== ' + appUid);
         if (abTestting) {
-            var abtestting = a + '/' + b;
+            var abtestting = a;
             hotDB.saveABsetting(appUid, appVersion, fileName, hashCode, fileName, fileSize, description, patch_status, patch_type, tags, abtestting, function (err) {
                 console.log('err' + err);
                 if (err) {
@@ -747,7 +747,7 @@ router.get('/abuser', function (req, res, next) {
         if (err) {
             return next(err);
         }
-        console.log('absetting  = '+obj.acount,obj.bcount,obj.deiscriton);
+        console.log('absetting  = '+obj.acount,obj.bcount,obj.description);
         res.render('abuser', {
             title: 'abuser',
             abuser:obj

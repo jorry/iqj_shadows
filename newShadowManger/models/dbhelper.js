@@ -20,6 +20,9 @@ module.exports = DB;
 
 
 DB.query=function(sql,callback){
+
+    console.log(sql);
+
     pool.getConnection(function(err,conn){
         if(err){
             callback(err,null,null);

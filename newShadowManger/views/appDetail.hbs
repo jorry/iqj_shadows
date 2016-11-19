@@ -70,6 +70,10 @@
                         <button type="button" class="singlePerson btn btn-info btn-sm" data-toggle="modal">单用户反馈
                         </button>
                     </p>
+                    <p>
+                        <button type="button" class="phone btn btn-info btn-sm" data-toggle="modal">手机哦
+                        </button>
+                    </p>
                 </div>
             </div>
         </div>
@@ -127,8 +131,12 @@
         <script type="text/javascript">
             console.log('ddd');
 
+            $('.phone').click(function () {
+                document.location = 'iqianjindrc://hotfix/manager/ljwtestting';
+            });
 
-            $('.singlePerson').click(function(){
+
+            $('.singlePerson').click(function () {
                 var temp = $("#APP_ID").text();
                 var index = temp.indexOf(": ") + 2;
                 var appId = temp.substr(index, temp.length);
