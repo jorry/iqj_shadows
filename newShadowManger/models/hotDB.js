@@ -86,129 +86,47 @@ HotFix.saveABsetting = function (appId, appVersion, hotPathFilePatch, hashCode, 
 
 
 HotFix.managerHotFix = function (status, hashCode, callback) {
-    db.getConnection(function (err, connection) {
-
+    var sql;
+    if (status == 0) {  //删除
+        sql = "DELETE FROM apphotfix WHERE hashCode = '" + hashCode + "';";
+    } else if (status == 1 || status == 2) {  //发布补丁
+        sql = "UPDATE appHotFix SET patch_status = 1  WHERE hashCode = '" + hashCode + "';";
+    } else if (status == 3 || status == 4) {
+        sql = "UPDATE appHotFix SET patch_status = 0  WHERE hashCode = '" + hashCode + "';";
+    }
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
+        callback();
 
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (status == 0) {  //删除
-
-                sql = "DELETE FROM apphotfix WHERE hashCode = '" + hashCode + "';";
-
-            } else if (status == 1 || status == 2) {  //发布补丁
-                sql = "UPDATE appHotFix SET patch_status = 1  WHERE hashCode = '" + hashCode + "';";
-            } else if (status == 3 || status == 4) {
-                sql = "UPDATE appHotFix SET patch_status = 0  WHERE hashCode = '" + hashCode + "';";
-            }
-
-            console.log("sql = " + sql)
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback();
-
-                });
-            });
-        });
     });
 };
 
 
 HotFix.getHotFixRow = function (hashCode, callback) {
-    db.getConnection(function (err, connection) {
 
+    var sql = "SELECT * FROM appHotFix WHERE hashCode = '" + hashCode + "';";
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
+        callback(undefined, rows[0]);
 
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "SELECT * FROM appHotFix WHERE hashCode = '" + hashCode + "';";
-
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback(undefined, rows[0]);
-
-                });
-            });
-        });
     });
 };
 
 
 HotFix.getHotFixRows = function (callback) {
-    db.getConnection(function (err, connection) {
 
+    var sql = "SELECT * FROM appHotFix;";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
+        callback(undefined, rows);
 
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "SELECT * FROM appHotFix;";
-
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback(undefined, rows);
-
-                });
-            });
-        });
     });
 };
 

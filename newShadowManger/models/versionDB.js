@@ -9,28 +9,26 @@ module.exports = versionDB;
 
 
 versionDB.selectAll = function(appUid,callback){
-
-    var date = new Date().Format("yyyy-MM-dd");
-    console.log('日期函数:'+date);
-
     var sql = "SELECT * FROM version_info WHERE app_uid= '"+appUid+"';";
-
     db.query(sql,function(err,rows,fields){
         if(err){
-            return callback(err)
+            return callback(err);
         }
+        //rows是一个对象数组
         callback(undefined,rows);
     });
 };
 
 versionDB.insertVersionDB = function(appId,version_name,callback){
+
     var date = new Date().Format("yyyy-MM-dd");//
     var sql = "INSERT INTO version_info SET app_uid='"+appId+"',version_name='"+version_name+"',created_at='"+date+"';";
 
     db.query(sql,function(err,rows,fields){
         if(err){
-            return callback(err)
+            return callback(err);
         }
+        //rows是一个对象数组
         callback(undefined,rows);
     });
 };

@@ -11,269 +11,71 @@ module.exports = HotFix;
 
 // 根据appUid 和app版本,找到对应的 补丁列表
 HotFix.patchManager = function (app_uid,appVersion,callback) {
-    db.getConnection(function (err, connection) {
 
+    var sql = "SELECT * FROM appHotFix WHERE app_id = '"+app_uid+"' and appVersion = '"+appVersion+"';";
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
+        callback(undefined,rows);
 
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "SELECT * FROM appHotFix WHERE app_id = '"+app_uid+"' and appVersion = '"+appVersion+"';";
-            console.log('patchManager = '+sql);
-
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback(undefined,rows);
-                    connection.release();
-                });
-            });
-        });
     });
 };
 
 
 HotFix.getHotFixRowsEmergency = function (callback) {
-    db.getConnection(function (err, connection) {
 
+    var  sql = "SELECT * FROM appHotFix WHERE patch_type <> 1 and patch_type <> 0";
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
+        callback(undefined,rows);
 
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "SELECT * FROM appHotFix WHERE patch_type <> 1 and patch_type <> 0";
-
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback(undefined,rows);
-                    connection.release();
-                });
-            });
-        });
     });
 };
 
 
 //应用名称,应用版本
 HotFix.getHotFixRows = function (callback) {
-    db.getConnection(function (err, connection) {
 
+    var   sql = "SELECT * FROM appHotFix;";
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
+        callback(undefined,rows);
 
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "SELECT * FROM appHotFix;";
-
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback(undefined,rows);
-                    connection.release();
-                });
-            });
-        });
     });
 };
 
 
-
-//
-////设置灰度功能,同一时间,只能有一个灰度
-//HotFix.graySetting = function (hashCode, appVersion, hotfixType, us, callback) {
-//    db.getConnection(function (err, connection) {
-//
-//        if (err) {
-//            return callback(err);
-//        }
-//
-//        var sql;
-//        connection.beginTransaction(function (err) {
-//            if (err) {
-//                return callback(err);
-//            }
-//
-//            sql = "SELECT * FROM graySetting";
-//            connection.query(sql,[],function(err,rows){
-//
-//                if (err) {
-//                    return callback(err);
-//                }
-//
-//                if (rows.length >= 1){
-//                    return callback('同一时间只能有一个灰度功能测试,请在灰度代码回滚界面查看相关信息');
-//                }
-//
-//                var date = new Date().Format("yyyy-MM-dd");
-//                var revert = 1;
-//                var hotUrl = "http://172.20.30.66:8080/patch_signed_7zip.apk";
-//
-//                console.log('graySetting ');
-//                //sql = "INSERT INTO graySetting (appVersion,hashCode,hotfixType,hotUrl,revert,us) VALUES ('" + appVersion + "','" + hashCode + "','" + hotfixType + "','"+ hotUrl+ "','" + revert + "','" + us + "');";
-//
-//                connection.query("INSERT INTO graySetting SET appVersion=?,hashCode=?,hotfixType=?,hotUrl=?,revert=?,us=?", [appVersion, hashCode, hotfixType, hotUrl, revert, us], function (err, rows) {
-//                    console.log('graySetting = ' + err);
-//                    if (err) {
-//                        return connection.rollback(function () {
-//                            callback(err);
-//                        });
-//                    }
-//                    console.log('graySetting = ');
-//                    connection.commit(function (err) {
-//
-//                        if (err) {
-//                            return connection.rollback(function () {
-//                                callback(err);
-//                            });
-//                        }
-//
-//                        connection.end();
-//                        callback();
-//
-//                    });
-//                });
-//            });
-//
-//
-//        });
-//    });
-//}
-
-//代码回滚的功能
-//HotFix.revert_return = function (imei, callback) {
-//    db.getConnection(function (err, connection) {
-//        console.log('进入到revert 版本回滚 数据库');
-//        if (err) {
-//            return
-//        }
-//        connection.beginTransaction(function (err) {
-//            if (err) {
-//                callback(err);
-//            }
-//
-//            sql = "UPDATE revert FROM hot WHERE  hasoCode = '" + imei + "';";
-//            console.log('sql rever' + sql);
-//            connection.query(sql, function (err, rows) {
-//                console.log('进入到revert 数据库-查询结果: err ' + err + "   rows = " + rows);
-//                if (err) {
-//                    return connection.rollback(function () {
-//                        callback(err);
-//                    })
-//                }
-//                callback(undefined, rows);
-//            })
-//        })
-//    });
-//};
-
  //回滚列表
 HotFix.hotReverListView = function (callback) {
-    db.getConnection(function (err, connection) {
-        console.log('进入到hotFix 数据库');
+
+    var sql = "SELECT hasoCode,hotFixType,revert FROM hot  WHERE hotFixType != 1 and hotFixType != 4 and revert = 1";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return
+            return callback(err)
         }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
+        callback(undefined, rows);
 
-            sql = "SELECT hasoCode,hotFixType,revert FROM hot  WHERE hotFixType != 1 and hotFixType != 4 and revert = 1";
-
-            console.log('进入到hotFix 数据库-查询语句是: ' + sql);
-            connection.query(sql, function (err, rows) {
-                console.log('进入到hotFix 数据库-查询结果: err ' + err + "   rows = " + rows);
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    })
-                }
-                connection.end;
-                callback(undefined, rows);
-                connection.release();
-            })
-        })
     });
+
 };
 
 
 HotFix.addOneUserStep = function (callback) {
-    db.getConnection(function (err, connection) {
-        if (err) {
-            return
-        }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
 
-            sql = "SELECT * FROM addOneUserStep ;";
-            connection.query(sql, function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    })
-                }
-                connection.end;
-                callback(undefined, rows);
-                connection.release();
-            })
-        })
+    var   sql = "SELECT * FROM addOneUserStep ;";
+
+    db.query(sql, function (err, rows, fields) {
+        if (err) {
+            return callback(err)
+        }
+        callback(undefined, rows);
+
     });
 };
 
@@ -281,142 +83,69 @@ HotFix.addOneUserStep = function (callback) {
 //}
 
 HotFix.addSaveHot = function (hashCode, hotFixType, revert, callback) {
-    db.getConnection(function (err, connection) {
-        console.log('进入到  getOneUserStep 数据库');
+
+    var  sql = "INSERT INTO hot (hasoCode,hotFixType,revert) VALUES ('" + hashCode + "','" + hotFixType + "','" + revert + "');";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return
+            return callback(err)
         }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
+        callback();
 
-            sql = "INSERT INTO hot (hasoCode,hotFixType,revert) VALUES ('" + hashCode + "','" + hotFixType + "','" + revert + "');";
-            connection.query(sql, [], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-
-                    connection.end();
-                    callback();
-                    connection.release();
-
-                });
-            });
-        })
     });
 };
 
 
 HotFix.getOneUserStep = function (imei, callback) {
-    db.getConnection(function (err, connection) {
-        console.log('进入到  getOneUserStep 数据库');
+
+    var sql = "SELECT * FROM addOneUserStep WHERE id = '" + imei + "';";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return
+            return callback(err)
         }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
+        callback(undefined, rows[0].step);
 
-            var sql = "SELECT * FROM addOneUserStep WHERE id = '" + imei + "';";
-
-            console.log('进入到   addOneUserStep 数据库-查询语句是: ' + sql);
-            connection.query(sql, function (err, rows) {
-                console.log('进入到   addOneUserStep  数据库-查询结果: err ' + err + "   rows = " + rows);
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    })
-                }
-                console.log('进入到   addOneUserStep step: ' + rows[0].step);
-                connection.end;
-                callback(undefined, rows[0].step);
-                connection.release();
-            })
-        })
     });
 };
 
 HotFix.getHotFixResult = function (callback) {
 
-    db.getConnection(function (err, connection) {
-        if (err) {
-            return;
-        }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return;
-            }
+    var sql = "SELECT distinct hashCode FROM appHotFix ;";
 
-            var sql = "SELECT distinct hashCode FROM appHotFix ;";
-            console.log('进入到   hotfix 数据库-查询语句是: ' + sql)
-            connection.query(sql, function (err, rows) {
-                console.log('进入到   hotfix  数据库-查询结果: err ' + err + "   rows = " + rows);
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-                connection.end;
-                callback(undefined, rows);
-                connection.release();
-            })
-        });
-    })
+    db.query(sql, function (err, rows, fields) {
+        if (err) {
+            return callback(err)
+        }
+        callback(undefined, rows);
+
+    });
 };
 
 HotFix.getHotFixCountByHashCode = function(hashCode, callback) {
-    db.getConnection(function (err, connection) {
+
+    var sql = "SELECT COUNT(*) AS count FROM iqj_apphotfixstate where hashCodeApp = '"+hashCode+"' ;";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return;
+            return callback(err)
         }
-        var sql = "SELECT COUNT(*) AS count FROM iqj_apphotfixstate where hashCodeApp = '"+hashCode+"' ;";
-        console.log('进入到   iqj_apphotfixstate 数据库-查询语句是: ' + sql)
-        connection.query(sql, function (err, rows) {
-            console.log('进入到   iqj_apphotfixstate  数据库-查询结果: err ' + err + "   rows = " + rows);
-            if (err) {
-                return connection.rollback(function () {
-                    callback(err);
-                });
-            }
-            connection.end;
-            callback(undefined, rows[0].count);
-            connection.release();
-        })
-    })
+        callback(undefined, rows[0].count);
+
+    });
 }
 
 HotFix.getHotFixCountSuccess = function(hashCode, callback) {
-    db.getConnection(function (err, connection) {
-        if (err) {
-            return;
-        }
 
-        var sql = "SELECT COUNT(*) AS count FROM iqj_apphotfixstate where hashCodeApp = '"+hashCode+"' and appState = '1' ;";
-        console.log('进入到   iqj_apphotfixstate 数据库-查询语句是: ' + sql)
-        connection.query(sql, function (err, rows) {
-            console.log('进入到   iqj_apphotfixstate  数据库-查询结果: err ' + err + "   rows = " + rows);
-            if (err) {
-                return connection.rollback(function () {
-                    callback(err);
-                });
-            }
-            connection.end;
-            callback(undefined, rows[0].count);
-            connection.release();
-        })
-    })
+    var sql = "SELECT COUNT(*) AS count FROM iqj_apphotfixstate where hashCodeApp = '"+hashCode+"' and appState = '1' ;";
+
+    db.query(sql, function (err, rows, fields) {
+        if (err) {
+            return callback(err)
+        }
+        callback(undefined, rows[0].count);
+
+    });
 }
 
 
