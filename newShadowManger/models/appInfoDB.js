@@ -2,131 +2,45 @@
  * Created by iqianjin-liujiawei on 16/11/11.
  */
 var db = require('./dbhelper');
-var versionDB  = require('./versionDB');
+var versionDB = require('./versionDB');
 var appInfoDB = {};
 
 module.exports = appInfoDB;
 
-appInfoDB.getAppDetail = function(appUid,callback){
-    db.getConnection(function (err, connection) {
-
+appInfoDB.getAppDetail = function (appUid, callback) {
+    sql = "SELECT appName,platfrom,uid,descriiption_app,create_at FROM appInfo WHERE uid='" + appUid + "';";
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
-        console.log(appUid+'1-----进来了吗');
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql = "SELECT appName,platfrom,uid,descriiption_app,create_at FROM appInfo WHERE uid=?;";
-            console.log('2-----进来了吗');
-            connection.query(sql,[appUid], function (err, row) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-                console.log('3-----进来了吗'+row);
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    console.log('4-----进来了吗');
-                    connection.end();
-                    callback(undefined,row);
-
-                });
-            });
-        });
+        callback(undefined, rows);
     });
 };
 
-appInfoDB.selectAll = function(callback){
-    db.getConnection(function (err, connection) {
-
+appInfoDB.selectAll = function (callback) {
+    var sql = "SELECT * FROM appInfo;";
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
-        console.log('1-----进来了吗');
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            var date = new Date().Format("yyyy-MM-dd");
-
-            sql = "SELECT * FROM appInfo;";
-            console.log('2-----进来了吗');
-            connection.query(sql,[], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-                console.log('3-----进来了吗'+rows);
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    console.log('4-----进来了吗');
-                    connection.end();
-                    callback(undefined,rows);
-
-                });
-            });
-        });
+        callback(undefined, rows);
     });
 };
 
-appInfoDB.insertAppInfo = function(appName,platform,u_id,destination,callback){
-    db.getConnection(function (err, connection) {
+appInfoDB.insertAppInfo = function (appName, platform, u_id, destination, callback) {
 
+    var date = new Date().Format("yyyy-MM-dd");
+
+    var sql = "INSERT INTO appInfo SET appName='" + appName + "',platfrom='" + platform + "',uid='" + u_id + "',descriiption_app='" + destination + "',create_at='" + date + "'";
+    console.log(sql);
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return callback(err);
+            return callback(err)
         }
-        console.log('1-----进来了吗');
-        var sql;
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            sql  = "SELECT * FROM appInfo WHERE appName = '"+appName+"';";
-            var date = new Date().Format("yyyy-MM-dd");
-
-            sql = "INSERT INTO appInfo SET appName=?,platfrom=?,uid=?,descriiption_app=?,create_at=?";
-            console.log('2-----进来了吗');
-            connection.query(sql, [appName, platform, u_id, destination, date], function (err, rows) {
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    });
-                }
-                console.log('3-----进来了吗');
-                connection.commit(function (err) {
-
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    console.log('4-----进来了吗');
-                    connection.end();
-                    callback();
-
-                });
-            });
-        });
+        callback(undefined, rows);
     });
+
 };
 
 

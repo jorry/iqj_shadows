@@ -19,6 +19,7 @@ var response = function () {
 
 // 根据appUid 和app版本,找到对应的 补丁列表
 absetting.selectAllABsetting = function (hashCode, callback) {
+
     db.getConnection(function (err, connection) {
         if (err) {
             return callback(err);

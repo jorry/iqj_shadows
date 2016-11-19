@@ -15,7 +15,7 @@ module.exports=User;
 //根据证件号查找用户
 User.findUserByreaderId=function(readerId, callback){
     var sql="SELECT * FROM user WHERE username ='"+readerId+"';";
-    db.exec(sql,'',function(err,rows){
+    db.query(sql,function(err,rows,fields){
         if(err){
             return callback(err);
         }

@@ -43,7 +43,7 @@ HotFix.patchManager = function (app_uid,appVersion,callback) {
 
                     connection.end();
                     callback(undefined,rows);
-
+                    connection.release();
                 });
             });
         });
@@ -83,7 +83,7 @@ HotFix.getHotFixRowsEmergency = function (callback) {
 
                     connection.end();
                     callback(undefined,rows);
-
+                    connection.release();
                 });
             });
         });
@@ -124,7 +124,7 @@ HotFix.getHotFixRows = function (callback) {
 
                     connection.end();
                     callback(undefined,rows);
-
+                    connection.release();
                 });
             });
         });
@@ -245,6 +245,7 @@ HotFix.hotReverListView = function (callback) {
                 }
                 connection.end;
                 callback(undefined, rows);
+                connection.release();
             })
         })
     });
@@ -270,6 +271,7 @@ HotFix.addOneUserStep = function (callback) {
                 }
                 connection.end;
                 callback(undefined, rows);
+                connection.release();
             })
         })
     });
@@ -307,6 +309,7 @@ HotFix.addSaveHot = function (hashCode, hotFixType, revert, callback) {
 
                     connection.end();
                     callback();
+                    connection.release();
 
                 });
             });
@@ -339,6 +342,7 @@ HotFix.getOneUserStep = function (imei, callback) {
                 console.log('进入到   addOneUserStep step: ' + rows[0].step);
                 connection.end;
                 callback(undefined, rows[0].step);
+                connection.release();
             })
         })
     });
@@ -366,6 +370,7 @@ HotFix.getHotFixResult = function (callback) {
                 }
                 connection.end;
                 callback(undefined, rows);
+                connection.release();
             })
         });
     })
@@ -387,6 +392,7 @@ HotFix.getHotFixCountByHashCode = function(hashCode, callback) {
             }
             connection.end;
             callback(undefined, rows[0].count);
+            connection.release();
         })
     })
 }
@@ -408,6 +414,7 @@ HotFix.getHotFixCountSuccess = function(hashCode, callback) {
             }
             connection.end;
             callback(undefined, rows[0].count);
+            connection.release();
         })
     })
 }
