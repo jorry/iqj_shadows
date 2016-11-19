@@ -9,7 +9,7 @@ function hotPatch() {
 
 module.exports = hotPatch;
 
-hotPatch.selectPatchVersion = function (appId,callback) {
+hotPatch.selectPatchVersion = function (appId, callback) {
     db.getConnection(function (err, connection) {
         console.log('进入到hotFix 数据库');
         if (err) {
@@ -20,7 +20,7 @@ hotPatch.selectPatchVersion = function (appId,callback) {
                 callback(err);
             }
 
-            var sql = "SELECT * FROM hotFix WHERE patch_status = '1'  and app_id='"+appId+"' ORDER BY id ASC;";   // patch_type = 0 表示灰度,patch_status = 1 表示已发布
+            var sql = "SELECT * FROM appHotFix WHERE patch_status = '1'  and app_id='" + appId + "' ORDER BY id ASC;";   // patch_type = 0 表示灰度,patch_status = 1 表示已发布
 
             console.log('进入到hotFix 数据库-查询语句是: ' + sql);
             connection.query(sql, function (err, rows) {
@@ -35,7 +35,7 @@ hotPatch.selectPatchVersion = function (appId,callback) {
         })
     });
 }
-hotPatch.getH5HotFix = function(callBack){
+hotPatch.getH5HotFix = function (callBack) {
     db.getConnection(function (err, connection) {
         if (err) {
             return
@@ -45,8 +45,8 @@ hotPatch.getH5HotFix = function(callBack){
                 callback(err);
             }
 
-            sql = "SELECT hotUrl FROM hotfix ORDER BY id DESC;";
-            connection.query(sql,[], function (err, rows) {
+            sql = "SELECT hotUrl FROM appHotFix ORDER BY id DESC;";
+            connection.query(sql, [], function (err, rows) {
 
                 if (err) {
                     return connection.rollback(function (err) {
@@ -60,7 +60,7 @@ hotPatch.getH5HotFix = function(callBack){
                         });
                     }
                     connection.end();
-                    callBack(undefined,rows);
+                    callBack(undefined, rows);
                 });
             })
         })
@@ -81,7 +81,7 @@ hotPatch.appHotFixState = function (imei, appState, hotPushType, callBack) {
             sql = "INSERT INTO iqj_appHotFixState set imei=?,appState=?,hotPushType=?;";
 
             console.log('进入到addUserPosition 数据库-查询语句是: ' + sql);
-            connection.query(sql,[imei,appState,hotPushType], function (err, rows) {
+            connection.query(sql, [imei, appState, hotPushType], function (err, rows) {
                 console.log('进入到addUserPositio 数据库-查询结果: err ' + err + "   rows = " + rows);
 
                 if (err) {
@@ -114,7 +114,7 @@ hotPatch.graySetting = function (callBack) {
             if (err) {
                 return callBack(err);
             }
-            var sql = "SELECT * FROM hotFix WHERE patch_type = '0' and patch_status = '1';";   // 0 表示灰度,1 表示已发布
+            var sql = "SELECT * FROM appHotFix WHERE patch_type = '0' and patch_status = '1';";   // 0 表示灰度,1 表示已发布
             connection.query(sql, function (err, rows) {
                 if (err) {
                     return connection.rollback(function (err) {
@@ -133,6 +133,43 @@ hotPatch.graySetting = function (callBack) {
 
             });
         });
+    });
+}
+
+
+// 存储单用户行为
+hotPatch.insertAB = function (hashCode, a, b,description) {
+    db.getConnection(function (err, connection) {
+        console.log('进入到addOneUserStep 数据库');
+        if (err) {
+            return
+        }
+        connection.beginTransaction(function (err) {
+            var atest;
+            var btest;
+            if (a == 0){
+                atest = 0;
+            }else{
+                btest = 1;
+            }
+            var sql = "INSERT INTO absetting (atest,btest,hashCode,description) VALUES ('" + atest + "','" + btest + "','" + hashCode + "','"+description+"')";
+
+            connection.query(sql, function (err, rows) {
+                if (err) {
+                    return connection.rollback(function (err) {
+                    });
+                }
+
+                connection.commit(function (err) {
+                    if (err) {
+                        return connection.rollback(function () {
+                            callback(err);
+                        });
+                    }
+                    connection.end();
+                });
+            })
+        })
     });
 }
 

@@ -12,20 +12,20 @@ var response = function () {
     this.msg;
 };
 
-function responseHotPatch(res,hotFix,status){
-    if(status == 404){
+function responseHotPatch(res, hotFix, status) {
+    if (status == 404) {
         var obj = new response();
         obj.code = -1;
         obj.msg = "没有新补丁";
         return res.send(JSON.stringify(obj));
-    }else {
+    } else {
         hotFix.code = 1;
         hotFix.msg = 'ok';
         return res.end(JSON.stringify(hotFix));
     }
 }
 
-function callBackDBErro(){
+function callBackDBErro() {
     var obj = new response();
     obj.code = -3;
     obj.msg = "DB err";
@@ -43,9 +43,11 @@ app.get('/getHotPatch', function (req, res) {
 
     var tags = req.query.tags;
 
-    dbHelper.selectPatchVersion(appId,function (err, results) {
+    console.log('patchVersion = '+patchVersion);
+
+    dbHelper.selectPatchVersion(appId, function (err, results) {
         if (err) {
-           return callBackDBErro();
+            return callBackDBErro();
         }
         if (!results) {
             var obj = new response();
@@ -54,47 +56,51 @@ app.get('/getHotPatch', function (req, res) {
             return res.end(JSON.stringify(obj));
         }
 
-
         var isHaveGray = false;
         var hotFix;
-        console.log('size = '+results.length)
 
-        //for(var i = 0;i < results.length;i ++){
-        //    var result = results[i];
-        //    if (tags && result.patchVersion > patchVersion && result.patch_type == 5 && result.patch_status == 1){
-        //
-        //    }
-        //}
 
-        results.forEach(function(result){
-            if(result.patch_type == 6 && result.patch_status == 1 && result.patchVersion > patchVersion){  //全量更新
+        results.forEach(function (result) {
+
+
+            var sqlAppVersion = result.appVersion.replace('.', '').replace('.', '');
+            appVersion = appVersion.replace('.', '').replace('.', '');
+
+            if (result.patch_type == 6 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //全量更新
                 isHaveGray = true;
                 console.log('all');
                 hotFix = result;
-            }else  if(result.patch_type == 5 && result.patch_status == 1 && result.patchVersion > patchVersion){  //h5
+            } else if (result.patch_type == 5 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //h5
                 isHaveGray = true;
                 console.log('gray');
                 hotFix = result;
 
-            }else  if(result.patch_type == 1 && result.patch_status == 1 && result.patchVersion > patchVersion){  //灰度
+            } else if (sqlAppVersion == appVersion && result.patch_type == 7 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //a/b testting
+                isHaveGray = true;
+                var ab = (Math.round(Math.random()));
+                result.random = (ab);
+                hotFix = result;
+                dbHelper.insertAB(result.hashCode, ab, ab,result.description);
+
+            } else if (sqlAppVersion == appVersion && tags == result.tags && result.patch_type == 0 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //灰度
+                isHaveGray = true;
+                console.log('gray');
+                hotFix = result;
+
+            } else if (result.appVersion == appVersion && result.patch_type == 1 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //版本升级
                 isHaveGray = true;
                 console.log('version');
-                hotFix = result;
-
-            }else  if(tags == 77 && result.patch_type == 0 && result.patch_status == 1 && result.patchVersion > patchVersion){  //灰度
-                isHaveGray = true;
-                console.log('gray');
                 hotFix = result;
 
             }
         })
 
-        console.log('hotFix = '+hotFix);
+        console.log('hotFix = ' + hotFix);
 
-        if (hotFix){
-            return responseHotPatch(res,hotFix,200)
-        }else{
-            return responseHotPatch(res,hotFix,404)
+        if (hotFix) {
+            return responseHotPatch(res, hotFix, 200)
+        } else {
+            return responseHotPatch(res, hotFix, 404)
         }
 
 
@@ -103,23 +109,23 @@ app.get('/getHotPatch', function (req, res) {
 
 });
 
-app.get('/appH5HotFix',function(req,res){
+app.get('/appH5HotFix', function (req, res) {
     var patchVersion = req.query.patchVersion;
 
-    dbHelper.getH5HotFix(function(err,rows){
-        if (err){
+    dbHelper.getH5HotFix(function (err, rows) {
+        if (err) {
             var obj = new response();
             obj.code = -3;
             obj.msg = "DB err";
             return res.end(JSON.stringify(obj));
         }
-        rows.forEach(function(row){
-            console.log('-----appH5Hotfix'+row.hotUrl);
-           if (patchVersion < row){
-               row.code = 1;
-               row.msg = 'ok';
-               return res.end(JSON.stringify(row));
-           }
+        rows.forEach(function (row) {
+            console.log('-----appH5Hotfix' + row.hotUrl);
+            if (patchVersion < row) {
+                row.code = 1;
+                row.msg = 'ok';
+                return res.end(JSON.stringify(row));
+            }
         });
     });
 });
@@ -159,13 +165,13 @@ app.get('/addOneUserStep', function (req, res) {
 
     console.log('addOneUserStep = ');
 
-    dbHelper.addOneUserStep(imei,appVersion,osVersion,net,step,function(err){
-       if (err){
-           var obj = new response();
-           obj.code = -3;
-           obj.msg = "DB err";
-           return res.send(JSON.stringify(obj));
-       }
+    dbHelper.addOneUserStep(imei, appVersion, osVersion, net, step, function (err) {
+        if (err) {
+            var obj = new response();
+            obj.code = -3;
+            obj.msg = "DB err";
+            return res.send(JSON.stringify(obj));
+        }
         var obj = new response();
         obj.code = 1;
         obj.msg = 'ok';
@@ -183,10 +189,10 @@ app.get('/graySetting', function (req, res) {
     var us = req.query.us;
 
     dbHelper.graySetting(function (err, result) {
-        console.log('graySetting--1'+err);
+        console.log('graySetting--1' + err);
 
         if (err) {
-            console.log('graySetting--1.1'+err);
+            console.log('graySetting--1.1' + err);
             var obj = new response();
             obj.code = -3;
             obj.msg = "DB err";
@@ -196,23 +202,23 @@ app.get('/graySetting', function (req, res) {
         var isHaveGray = false;
         var hotFix;
         result.forEach(function (row) {
-            console.log(row.appVersion+"......appVersion......"+appVersion);
-            console.log(row.us+"......appVersion......"+us);
+            console.log(row.appVersion + "......appVersion......" + appVersion);
+            console.log(row.us + "......appVersion......" + us);
             if (row.appVersion > appVersion) {
                 isHaveGray = true;
                 hotFix = row;
-            }else{
-               isHaveGray = false;
+            } else {
+                isHaveGray = false;
             }
         });
 
-        if (isHaveGray){
+        if (isHaveGray) {
             result.code = 1;
             result.msg = 'ok';
-            console.log(isHaveGray+'灰度接口 返回:'+result.hotUrl);
+            console.log(isHaveGray + '灰度接口 返回:' + result.hotUrl);
             return res.send(JSON.stringify(result));
 
-        }else{
+        } else {
             var obj = new response();
             obj.code = -1;
             obj.msg = "没有新补丁";
