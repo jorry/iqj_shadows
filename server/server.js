@@ -66,6 +66,8 @@ app.get('/getHotPatch', function (req, res) {
             var sqlAppVersion = result.appVersion.replace('.', '').replace('.', '');
             appVersion = appVersion.replace('.', '').replace('.', '');
 
+            console.log('patchVersion in db = '+result.patchVersion , patchVersion);
+            console.log('appVersion in app = '+appVersion , 'sq; = '+sqlAppVersion);
             if (result.patch_type == 6 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //全量更新
                 isHaveGray = true;
                 console.log('all');
@@ -87,15 +89,13 @@ app.get('/getHotPatch', function (req, res) {
                 console.log('gray');
                 hotFix = result;
 
-            } else if (result.appVersion == appVersion && result.patch_type == 1 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //版本升级
+            } else if (sqlAppVersion == appVersion && result.patch_type == 1 && result.patch_status == 1 && result.patchVersion > patchVersion) {  //版本升级
                 isHaveGray = true;
                 console.log('version');
                 hotFix = result;
 
             }
         })
-
-        console.log('hotFix = ' + hotFix);
 
         if (hotFix) {
             return responseHotPatch(res, hotFix, 200)

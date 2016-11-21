@@ -10,204 +10,76 @@ function hotPatch() {
 module.exports = hotPatch;
 
 hotPatch.selectPatchVersion = function (appId, callback) {
-    db.getConnection(function (err, connection) {
-        console.log('进入到hotFix 数据库');
+
+    var sql = "SELECT * FROM appHotFix WHERE patch_status = '1'  and app_id='" + appId + "' ORDER BY id ASC;";   // patch_type = 0 表示灰度,patch_status = 1 表示已发布
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return
+            return callback(err)
         }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
-
-            var sql = "SELECT * FROM appHotFix WHERE patch_status = '1'  and app_id='" + appId + "' ORDER BY id ASC;";   // patch_type = 0 表示灰度,patch_status = 1 表示已发布
-
-            console.log('进入到hotFix 数据库-查询语句是: ' + sql);
-            connection.query(sql, function (err, rows) {
-                console.log('进入到hotFix 数据库-查询结果: err ' + err + "   rows = " + rows);
-                if (err) {
-                    return connection.rollback(function () {
-                        callback(err);
-                    })
-                }
-                callback(undefined, rows);
-            })
-        })
+        callback(undefined, rows);
     });
 }
 hotPatch.getH5HotFix = function (callBack) {
-    db.getConnection(function (err, connection) {
+
+
+    var sql = "SELECT hotUrl FROM appHotFix ORDER BY id DESC;";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return
+            return callback(err)
         }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
-
-            sql = "SELECT hotUrl FROM appHotFix ORDER BY id DESC;";
-            connection.query(sql, [], function (err, rows) {
-
-                if (err) {
-                    return connection.rollback(function (err) {
-                        callback(err);
-                    });
-                }
-                connection.commit(function (err) {
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    connection.end();
-                    callBack(undefined, rows);
-                });
-            })
-        })
+        callBack(undefined, rows);
     });
 }
 // 存储app修复的状态  imei  appState  hotPushType
 hotPatch.appHotFixState = function (imei, appState, hotPushType, callBack) {
-    db.getConnection(function (err, connection) {
-        console.log('进入到addUserPosition 数据库');
+
+    var sql = "INSERT INTO iqj_appHotFixState set imei='"+imei+"',appState='"+appState+"',hotPushType='"+hotPushType+"';";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return
+            return callback(err)
         }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
-
-            sql = "INSERT INTO iqj_appHotFixState set imei=?,appState=?,hotPushType=?;";
-
-            console.log('进入到addUserPosition 数据库-查询语句是: ' + sql);
-            connection.query(sql, [imei, appState, hotPushType], function (err, rows) {
-                console.log('进入到addUserPositio 数据库-查询结果: err ' + err + "   rows = " + rows);
-
-                if (err) {
-                    return connection.rollback(function (err) {
-                        callback(err);
-                    });
-                }
-
-                connection.commit(function (err) {
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    connection.end();
-                    callBack();
-                });
-            })
-        })
+        callBack();
     });
-
 }
 
 hotPatch.graySetting = function (callBack) {
-    db.getConnection(function (err, connection) {
-        if (err) {
-            return;
-        }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                return callBack(err);
-            }
-            var sql = "SELECT * FROM appHotFix WHERE patch_type = '0' and patch_status = '1';";   // 0 表示灰度,1 表示已发布
-            connection.query(sql, function (err, rows) {
-                if (err) {
-                    return connection.rollback(function (err) {
-                        callback();
-                    });
-                }
-                connection.commit(function (err) {
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    connection.end();
-                    callBack(undefined, rows);
-                });
 
-            });
-        });
+    var sql = "SELECT * FROM appHotFix WHERE patch_type = '0' and patch_status = '1';";   // 0 表示灰度,1 表示已发布
+
+    db.query(sql, function (err, rows, fields) {
+        if (err) {
+            return callback(err)
+        }
+        callBack(undefined, rows);
     });
 }
 
 
 // 存储单用户行为
-hotPatch.insertAB = function (hashCode, a, b,description) {
-    db.getConnection(function (err, connection) {
-        console.log('进入到addOneUserStep 数据库');
-        if (err) {
-            return
-        }
-        connection.beginTransaction(function (err) {
-            var atest;
-            var btest;
-            if (a == 0){
-                atest = 0;
-            }else{
-                btest = 1;
-            }
-            var sql = "INSERT INTO absetting (atest,btest,hashCode,description) VALUES ('" + atest + "','" + btest + "','" + hashCode + "','"+description+"')";
+hotPatch.insertAB = function (hashCode, atest, btest, description,callBack) {
 
-            connection.query(sql, function (err, rows) {
-                if (err) {
-                    return connection.rollback(function (err) {
-                    });
-                }
+    var sql = "INSERT INTO absetting (atest,btest,hashCode,description) VALUES ('" + atest + "','" + btest + "','" + hashCode + "','" + description + "')";
 
-                connection.commit(function (err) {
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    connection.end();
-                });
-            })
-        })
-    });
+    //db.query(sql, function (err, rows, fields) {
+    //    if (err) {
+    //        return callback(err)
+    //    }
+    //    callBack();
+    //});
 }
 
 // 存储单用户行为
 hotPatch.addOneUserStep = function (imei, appVersion, osVersion, net, step, callBack) {
-    db.getConnection(function (err, connection) {
-        console.log('进入到addOneUserStep 数据库');
+
+    var sql = "INSERT INTO addOneUserStep (imei,appVersion,osVersion,net,step) VALUES ('" + imei + "','" + appVersion + "','" + osVersion + "','" + net + "','" + step + "')";
+
+    db.query(sql, function (err, rows, fields) {
         if (err) {
-            return
+            return callback(err)
         }
-        connection.beginTransaction(function (err) {
-            if (err) {
-                callback(err);
-            }
-
-            var sql = "INSERT INTO addOneUserStep (imei,appVersion,osVersion,net,step) VALUES ('" + imei + "','" + appVersion + "','" + osVersion + "','" + net + "','" + step + "')";
-
-            console.log('进入到addOneUserStep 数据库-查询语句是: ' + sql);
-            connection.query(sql, function (err, rows) {
-                console.log('进入到addUserPositio 数据库-查询结果: err ' + err + "   rows = " + rows);
-
-                if (err) {
-                    return connection.rollback(function (err) {
-                        callback(err);
-                    });
-                }
-
-                connection.commit(function (err) {
-                    if (err) {
-                        return connection.rollback(function () {
-                            callback(err);
-                        });
-                    }
-                    connection.end();
-                    callBack();
-                });
-            })
-        })
+        callBack();
     });
-
 }
